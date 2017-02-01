@@ -1,57 +1,65 @@
 #include "ft_ls.h"
 
-int ft_ls()
-{
-	return (0);
-}
+// int ft_ls()
+// {
+// 	return (0);
+// }
 
-void 	ft_putarglst(t_arg *arg_lst)
+void 	ft_putlst(t_env *e)
 {
-	t_arg *tmp;
+	t_dir_lst *tmp;
+	t_files_lst *tmp2;
 
-	tmp = arg_lst;
+	tmp = e->dir_lst;
+	tmp2 = e->fil_lst;
 	while (tmp)
 	{
-		ft_putstr(tmp->filename);
-		write(1, " ", 1);
+		ft_putstr(tmp->d_name);
+		write(1, "\n", 1);
 		tmp = tmp->next;
 	}
-}
-
-void ft_delete_arg(t_arg *false_arg)
-{
-	t_arg *tmp;
-
-	tmp = false_arg;
-	if (tmp->prev)
-		tmp->prev->next = tmp->next;
-	if (tmp->next)
-		tmp->next->prev = tmp->prev;
-	free(false_arg->filename);
-	free(false_arg);
-}
-
-int	ft_open_arg_lst(t_arg *arg_lst)
-{
-	t_arg *tmp;
-
-	tmp = arg_lst;
-	while (tmp)
+	while (tmp2)
 	{
-
+		ft_putstr(tmp2->f_name);
+		write(1, "\n", 1);
+		tmp2 = tmp2->next;
 	}
-	return (0);
 }
+
+// void ft_delete_arg(t_arg *false_arg)
+// {
+// 	t_arg *tmp;
+
+// 	tmp = false_arg;
+// 	if (tmp->prev)
+// 		tmp->prev->next = tmp->next;
+// 	if (tmp->next)
+// 		tmp->next->prev = tmp->prev;
+// 	free(false_arg->filename);
+// 	free(false_arg);
+// }
+
+// int	ft_open_arg_lst(t_arg *arg_lst)
+// {
+// 	t_arg *tmp;
+
+// 	tmp = arg_lst;
+// 	while (tmp)
+// 	{
+
+// 	}
+// 	return (0);
+// }
 
 int main(int argc, char **argv)
 {
-	t_env e;
+	t_env *e;
 
 	if (!(e = ft_parse(argc, argv)))
 		return (-1);
-	ft_open_arg_lst(e);
+	//ft_open_arg_lst(e);
 
-	ft_putarglst(arg_lst);
-	ft_ls();
+	ft_putlst(e);
+//	ft_ls();
 	return (0);
 }

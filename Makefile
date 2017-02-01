@@ -1,6 +1,6 @@
 NAME 	= ft_ls
 FLAGS 	= -Wall -Wextra -Werror
-SRCS	= ft_ls.c ft_parse.c
+SRCS	= ft_ls.c ft_parse.c ft_create_lst.c
 OBJ		= $(SRCS:.c=.o)
 LIB		= libft/libft.a
 
