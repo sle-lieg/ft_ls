@@ -38,38 +38,18 @@ int	ft_open_arg_lst(t_arg *arg_lst)
 	tmp = arg_lst;
 	while (tmp)
 	{
-		if ((stat(tmp->filename, tmp->arg_details) == -1))
-		{
-			write(1, "ls: ", 4);
-			ft_putstr(tmp->filename);
-			perror("");
-			tmp = tmp->next;
-			ft_delete_arg(tmp->prev);
-		}
-		else 
-		{
-			if (S_ISDIR(tmp->arg_details->st_mode))
-			{
-				if (!(tmp->dir = opendir(tmp->filename)))
-					perror("error opendir ");
-			}
-			else if (S_ISREG(tmp->arg_details->st_mode))
-			{
-				ft_putstr(tmp->filename);
-			}
-			tmp = tmp->next;
-		}
+
 	}
 	return (0);
 }
 
 int main(int argc, char **argv)
 {
-	t_arg *arg_lst;
+	t_env e;
 
-	if (!(arg_lst = ft_parse(argc, argv)))
+	if (!(e = ft_parse(argc, argv)))
 		return (-1);
-	ft_open_arg_lst(arg_lst);
+	ft_open_arg_lst(e);
 
 	ft_putarglst(arg_lst);
 	ft_ls();
