@@ -41,7 +41,7 @@ typedef struct 	s_env
 //	struct s_arg *arg_lst;
 	struct s_dir_lst 	*dir_lst;
 	struct s_files_lst 	*fil_lst;
-	struct stat 		*stat_tmp;
+	struct stat 		stat_tmp;
 
 }				t_env;
 
@@ -50,16 +50,18 @@ t_env 		*ft_parse(int argc, char **argv);
 void 		ft_get_option(char **options, char *str);
 t_env 		*ft_init(void);
 
-/* ***** ft_create_lst ***** */
-int 		ft_insert_dir(t_env *e, char *dir_name);
+/* ***** ft_fil_lst ***** */
 int 		ft_insert_file(t_env *e, char *file_name);
-t_dir_lst 	*ft_sort(t_dir_lst *dir_lst, char *name);
-t_dir_lst 	*ft_sort_drev(t_dir_lst *dir_lst, char *name);
-t_dir_lst 	*ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next);
 t_files_lst	*ft_add_file(char *file_name, t_files_lst *prev, t_files_lst *next);
-
 t_files_lst *ft_sort_frev(t_files_lst *files_lst, char *name);
 t_files_lst *ft_sort_f(t_files_lst *files_lst, char *name);
+
+
+/* ***** ft_dir_lst ***** */
+int 		ft_insert_dir(t_env *e, char *dir_name);
+t_dir_lst 	*ft_sort_d(t_dir_lst *dir_lst, char *name);
+t_dir_lst 	*ft_sort_drev(t_dir_lst *dir_lst, char *name);
+t_dir_lst 	*ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next);
 
 
 

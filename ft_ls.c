@@ -1,10 +1,5 @@
 #include "ft_ls.h"
 
-// int ft_ls()
-// {
-// 	return (0);
-// }
-
 void 	ft_putlst(t_env *e)
 {
 	t_dir_lst *tmp;
@@ -12,17 +7,19 @@ void 	ft_putlst(t_env *e)
 
 	tmp = e->dir_lst;
 	tmp2 = e->fil_lst;
-	while (tmp)
-	{
-		ft_putstr(tmp->d_name);
-		write(1, "\n", 1);
-		tmp = tmp->next;
-	}
+
 	while (tmp2)
 	{
 		ft_putstr(tmp2->f_name);
-		write(1, "\n", 1);
+		write(1, " ", 1);
 		tmp2 = tmp2->next;
+	}
+	write(1, "\n", 1);
+	while (tmp)
+	{
+		ft_putstr(tmp->d_name);
+		write(1, " ", 1);
+		tmp = tmp->next;
 	}
 }
 
@@ -51,6 +48,13 @@ void 	ft_putlst(t_env *e)
 // 	return (0);
 // }
 
+// int ft_ls(t_env *e)
+// {
+// 	ft_print_files(e->fil_lst);
+
+// 	return (0);
+// }
+
 int main(int argc, char **argv)
 {
 	t_env *e;
@@ -60,6 +64,6 @@ int main(int argc, char **argv)
 	//ft_open_arg_lst(e);
 
 	ft_putlst(e);
-//	ft_ls();
+//	ft_ls(e);
 	return (0);
 }

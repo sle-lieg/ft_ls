@@ -69,38 +69,31 @@ t_env 	*ft_parse(int argc, char **argv)
 
 	e = ft_init();
 	i = 0;
-	if (argc == 1)
+	
+	while (++i < argc)
 	{
-		ft_insert_dir(e, ".");
-	}
-	else
-	{
-		while (++i < argc)
+		if (argv[i][0] == '-')
+			ft_get_option(e->options, argv[i]);
+		else
 		{
-			if (argv[i][0] == '-')
-				ft_get_option(e->options, argv[i]);
+			if ((-1 == stat(argv[i], &(e->stat_tmp))))
+			{
+				write(1, "ls: ", 4);
+				perror(argv[i]);
+			}
+			else if ((S_ISDIR(e->stat_tmp.st_mode)))
+			{
+				ft_insert_dir(e, argv[i]);
+			}
 			else
 			{
-				if ((-1 == stat(argv[i], e->stat_tmp)))
-				{
-					perror("ls ");
-				}
-				else if ((S_ISDIR(e->stat_tmp->st_mode)))
-				{
-					ft_insert_dir(e, argv[i]);
-					// arg_lst = ft_add_arg(argv[i]);
-					// tmp = arg_lst;
-					// tmp->prev = NULL;
-				}
-				else
-				{
-					ft_insert_file(e, argv[i]);
-					// tmp->next = ft_add_arg(argv[i]);
-					// tmp->next->prev = tmp;
-					// tmp = tmp->next;
-				}
+				ft_insert_file(e, argv[i]);
 			}
 		}
+	}
+	if (!e->dir_lst && !e->fil_lst)
+	{
+		ft_insert_dir(e, ".");
 	}
 	return (e);
 }
