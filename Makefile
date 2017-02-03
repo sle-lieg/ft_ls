@@ -7,12 +7,12 @@ LIB		= libft/libft.a
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	gcc -c $(SRCS)
+	gcc -g -c $(SRCS)
 	gcc $(OBJ) $(LIB) -o $(NAME)
 	#gcc -o $@ $(OBJ) $(LIB)
 
 $(OBJ):
-	gcc -c $(FLAGS) $(SRCS)
+	gcc  -c $(FLAGS) $(SRCS)
 
 clean: $(OBJ)
 	rm -rf $(OBJ)

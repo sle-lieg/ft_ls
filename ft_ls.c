@@ -1,17 +1,4 @@
 #include "ft_ls.h"
-
-// void ft_delete_arg(t_arg *false_arg)
-// {
-// 	t_arg *tmp;
-
-// 	tmp = false_arg;
-// 	if (tmp->prev)
-// 		tmp->prev->next = tmp->next;
-// 	if (tmp->next)
-// 		tmp->next->prev = tmp->prev;
-// 	free(false_arg->filename);
-// 	free(false_arg);
-// }
  
 int		ft_print_files(t_env *e)
 {
@@ -29,9 +16,6 @@ int		ft_print_files(t_env *e)
 	}
 	return (0);
 }
-
-// CHANGER LES INSERT PAR DES ADD !!
-
 // char *ft_get_path_name(char *s1, char c, char *s2)
 // {
 
@@ -72,9 +56,6 @@ int 	ft_tmp_lst(t_env *e, char *dir_name)
 			}
 			tmp->next = ft_add_dir(dir_name, tmp, NULL);
 		}
-		printf("--%s\n", tmp->d_name);	
-	//	printf("--%s\n", tmp->next->d_name);	
-
 	}
 	return (0);
 }
@@ -102,7 +83,6 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 {
 	struct dirent *elem;
 
-	printf("++%s\n", dir_lst->d_name);	
 	if (!(dir_lst->dir = opendir(dir_lst->d_name)))
 	{
 		perror("ft_ls.c --> line 95 ");
@@ -114,9 +94,6 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][4] > '0' && (e->options[1][1] > '0' || elem->d_name[0] != '.')))
 		{
 			ft_tmp_lst(e, elem->d_name);
-			printf("+-%s\n", e->tmp_lst->d_name);
-			if (e->tmp_lst->next)
-				printf("+-%s\n", e->tmp_lst->next->d_name);
 		}
 		ft_insert_file(e, elem->d_name);
 	}
@@ -128,7 +105,7 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	if (e->tmp_lst)
 	{
 		ft_merge_lst(e, dir_lst);
-		//ft_reset_tmp_lst(e->tmp_lst);
+		e->tmp_lst = NULL;
 	}
 	ft_print_files(e);
 	return (0);
@@ -140,7 +117,7 @@ void ft_destroy_dir(t_dir_lst *dir)
 		free(dir->d_name);
 	if (-1 == (closedir(dir->dir)))
 		perror("ft_ls.c --> line 117 ");
-	//free(dir);
+	free(dir);
 }
 
 void ft_reset_tmp_lst(t_dir_lst *tmp_lst)
@@ -180,6 +157,8 @@ int ft_ls(t_env *e)
 
 	tmp = e->dir_lst;
 	ft_print_files(e);
+	if (e->fil_lst)
+		write(1, "\n", 1);
 	while (tmp)
 	{
 		if (e->fil_lst)
