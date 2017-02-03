@@ -12,10 +12,7 @@ t_dir_lst *ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next)
 	elem->d_name = ft_strdup(dir_name);
 	elem->next = next;
 	elem->prev = prev;
-	if (!(elem->dir = opendir(dir_name)))
-	{
-		perror("ft_parse.c --> line 162 ");
-	}
+	elem->dir = NULL;
 	return (elem);
 }
 
@@ -46,8 +43,6 @@ t_dir_lst *ft_sort_drev(t_dir_lst *dir_lst, char *name)
 	}
 	return(NULL);
 }
-
-
 
 int 	ft_insert_dir(t_env *e, char *dir_name)
 {

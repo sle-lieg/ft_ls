@@ -41,6 +41,7 @@ typedef struct 	s_env
 //	struct s_arg *arg_lst;
 	struct s_dir_lst 	*dir_lst;
 	struct s_files_lst 	*fil_lst;
+	struct s_dir_lst 	*tmp_lst;
 	struct stat 		stat_tmp;
 
 }				t_env;
@@ -66,6 +67,15 @@ t_dir_lst 	*ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next);
 
 
 /* ***** ft_ls.c ***** */
+int			ft_print_files(t_env *e);
+int 		ft_read_dir(t_env *e, t_dir_lst *dir_lst);
+void 		ft_destroy_fil_lst(t_env *e);
+int 		ft_tmp_lst(t_env *e, char *dir_name);
+int 		ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
+void 		ft_destroy_dir(t_dir_lst *dir);
+void 		ft_reset_tmp_lst(t_dir_lst *tmp_lst);
+
+
 // int	ft_open_arg_lst(t_arg *arg_lst);
 // void ft_delete_arg(t_arg *false_arg);
 

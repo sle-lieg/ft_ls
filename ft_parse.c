@@ -34,6 +34,7 @@ t_env *ft_init(void)
 	ft_init_opt(e);
 	e->dir_lst = NULL;
 	e->fil_lst = NULL;
+	e->tmp_lst = NULL;
 	return (e);
 }
 
