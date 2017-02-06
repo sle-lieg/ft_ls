@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-t_dir_lst *ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next)
+t_dir_lst *ft_add_dir(char *path_name, char *dir_name, t_dir_lst *prev, t_dir_lst *next)
 {
 	t_dir_lst *elem;
 	
@@ -13,6 +13,7 @@ t_dir_lst *ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next)
 	elem->next = next;
 	elem->prev = prev;
 	elem->dir = NULL;
+	elem->path = path_name;
 	return (elem);
 }
 
@@ -50,7 +51,7 @@ int 	ft_insert_dir(t_env *e, char *dir_name)
 
 	if (!(e->dir_lst))
 	{
-		e->dir_lst = ft_add_dir(dir_name, NULL, NULL);
+		e->dir_lst = ft_add_dir(dir_name, dir_name, NULL, NULL);
 	}
 	else
 	{
@@ -60,12 +61,12 @@ int 	ft_insert_dir(t_env *e, char *dir_name)
 			tmp = ft_sort_d(e->dir_lst, dir_name);
 		if(tmp && !tmp->prev)
 		{
-			tmp->prev = ft_add_dir(dir_name, NULL, tmp);
+			tmp->prev = ft_add_dir(dir_name, dir_name, NULL, tmp);
 			e->dir_lst = tmp->prev;
 		}
 		else if (tmp)
 		{
-			tmp->prev->next = ft_add_dir(dir_name, tmp->prev, tmp);
+			tmp->prev->next = ft_add_dir(dir_name, dir_name, tmp->prev, tmp);
 			tmp->prev = tmp->prev->next;
 		}
 		else
@@ -73,7 +74,7 @@ int 	ft_insert_dir(t_env *e, char *dir_name)
 			tmp = e->dir_lst;
 			while (tmp->next)
 				tmp = tmp->next;
-			tmp->next = ft_add_dir(dir_name, tmp, NULL);
+			tmp->next = ft_add_dir(dir_name, dir_name, tmp, NULL);
 		}
 	}
 	return (0);

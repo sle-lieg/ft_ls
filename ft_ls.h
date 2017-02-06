@@ -28,6 +28,7 @@ typedef struct s_files_lst
 typedef struct s_dir_lst
 {
 	char 				*d_name;
+	char 				*path;
 	DIR 				*dir;
 	struct stat 		*stat_buf;
 	struct s_dir_lst 	*next;
@@ -62,7 +63,7 @@ t_files_lst *ft_sort_f(t_files_lst *files_lst, char *name);
 int 		ft_insert_dir(t_env *e, char *dir_name);
 t_dir_lst 	*ft_sort_d(t_dir_lst *dir_lst, char *name);
 t_dir_lst 	*ft_sort_drev(t_dir_lst *dir_lst, char *name);
-t_dir_lst 	*ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next);
+t_dir_lst 	*ft_add_dir(char *path_name, char *dir_name, t_dir_lst *prev, t_dir_lst *next);
 
 
 
@@ -70,10 +71,11 @@ t_dir_lst 	*ft_add_dir(char *dir_name, t_dir_lst *prev, t_dir_lst *next);
 int			ft_print_files(t_env *e);
 int 		ft_read_dir(t_env *e, t_dir_lst *dir_lst);
 void 		ft_destroy_fil_lst(t_env *e);
-int 		ft_tmp_lst(t_env *e, char *dir_name);
+int 		ft_tmp_lst(t_env *e, char *dir_name, char *path_name);
 int 		ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
 void 		ft_destroy_dir(t_dir_lst *dir);
 void 		ft_reset_tmp_lst(t_dir_lst *tmp_lst);
+char 		*ft_get_path(t_env *e, char *file_name);
 
 
 // int	ft_open_arg_lst(t_arg *arg_lst);
