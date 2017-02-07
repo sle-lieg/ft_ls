@@ -100,19 +100,21 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	if (!(dir_lst->dir = opendir(dir_lst->path)))
 	{
 		perror("ft_ls.c --> line 109 ");
+		getchar();
 		return(0);
 	}
 	while ((elem = readdir(dir_lst->dir)))
 	{
-
 		path_name = ft_get_path(e, elem->d_name);
-		if ((stat(path_name, &(e->stat_tmp))))
-			perror("");
-		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][4] > '0' && (e->options[1][1] > '0' || elem->d_name[0] != '.')))
+		if (!(stat(path_name, &(e->stat_tmp))))
 		{
-			ft_tmp_lst(e, elem->d_name, path_name);
+			if ((S_ISDIR(e->stat_tmp.st_mode) && (e->stat_tmp.st_mode & (S_IRGRP | S_IROTH))
+			 && e->options[1][4] > '0' && (e->options[1][1] > '0' || elem->d_name[0] != '.')))
+			{
+				ft_tmp_lst(e, elem->d_name, path_name);
+			}
+			ft_insert_file(e, elem->d_name);
 		}
-		ft_insert_file(e, elem->d_name);
 	}
 	if (dir_lst->prev || dir_lst->next)
 	{
@@ -132,7 +134,7 @@ void ft_destroy_dir(t_dir_lst *dir)
 {
 	if (dir->d_name)
 		free(dir->d_name);
-	if (-1 == (closedir(dir->dir)))
+	if (dir->dir && (-1 == (closedir(dir->dir))))
 		perror("ft_ls.c --> line 117 ");
 	free(dir);
 }
