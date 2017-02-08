@@ -13,6 +13,14 @@ static void ft_init_opt(t_env *e)
 	e->options[1][2] = '0';
 	e->options[1][3] = '0';
 	e->options[1][4] = '0';
+
+	e->modes[0] = S_IFDIR;
+	e->modes[1] = S_IFREG;
+	e->modes[2] = S_IFLNK;
+
+	e->modes_char[0] = 'd';
+	e->modes_char[1] = '-';
+	e->modes_char[2] = 'l';
 }
 
 t_env *ft_init(void)
@@ -56,6 +64,9 @@ void 	ft_get_option(char **options, char *str)
 			}
 			if (i == 4)
 			{
+				write(1, "ls: illegal option -- ", 22);
+				write(1, p, 1);
+				write(1, "\n", 1);
 				write(1, "usage: ls [-Ralrt] [file ...]\n", 30);
 				exit(0);
 			}
@@ -70,7 +81,6 @@ t_env 	*ft_parse(int argc, char **argv)
 
 	e = ft_init();
 	i = 0;
-	
 	while (++i < argc)
 	{
 		if (argv[i][0] == '-')

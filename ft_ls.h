@@ -10,6 +10,8 @@
 #include <sys/types.h>
 #include "libft/libft.h"
 
+#define SET_MODE "d-l"
+
 typedef struct 	s_dirent
 {
 	struct dirent 	*file;
@@ -19,7 +21,7 @@ typedef struct 	s_dirent
 typedef struct s_files_lst
 {
 	char 				*f_name;
-	struct stat 		*stat_buf;
+	struct stat 		stat;
 	struct s_files_lst 	*next;
 	struct s_files_lst 	*prev;
 
@@ -29,8 +31,8 @@ typedef struct s_dir_lst
 {
 	char 				*d_name;
 	char 				*path;
+	off_t 				blocks_size;
 	DIR 				*dir;
-	struct stat 		*stat_buf;
 	struct s_dir_lst 	*next;
 	struct s_dir_lst 	*prev;
 
@@ -44,7 +46,8 @@ typedef struct 	s_env
 	struct s_files_lst 	*fil_lst;
 	struct s_dir_lst 	*tmp_lst;
 	struct stat 		stat_tmp;
-
+	unsigned int 		modes[3];
+	char 				modes_char[3];
 }				t_env;
 
 /* ***** ft_parse ***** */
@@ -54,7 +57,7 @@ t_env 		*ft_init(void);
 
 /* ***** ft_fil_lst ***** */
 int 		ft_insert_file(t_env *e, char *file_name);
-t_files_lst	*ft_add_file(char *file_name, t_files_lst *prev, t_files_lst *next);
+t_files_lst	*ft_add_file(t_env *e, char *file_name, t_files_lst *prev, t_files_lst *next);
 t_files_lst *ft_sort_frev(t_files_lst *files_lst, char *name);
 t_files_lst *ft_sort_f(t_files_lst *files_lst, char *name);
 
@@ -76,6 +79,7 @@ int 		ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
 void 		ft_destroy_dir(t_dir_lst *dir);
 void 		ft_reset_tmp_lst(t_dir_lst *tmp_lst);
 char 		*ft_get_path(t_env *e, char *file_name);
+void 		ft_print_l(t_env *e, t_files_lst *fil_lst);
 
 
 // int	ft_open_arg_lst(t_arg *arg_lst);

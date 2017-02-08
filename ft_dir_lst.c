@@ -13,6 +13,7 @@ t_dir_lst *ft_add_dir(char *path_name, char *dir_name, t_dir_lst *prev, t_dir_ls
 	elem->next = next;
 	elem->prev = prev;
 	elem->dir = NULL;
+	elem->blocks_size = 0;
 	elem->path = path_name;
 	return (elem);
 }

@@ -1,6 +1,6 @@
 #include "ft_ls.h"
 
-t_files_lst *ft_add_file(char *file_name, t_files_lst *prev, t_files_lst *next)
+t_files_lst *ft_add_file(t_env *e, char *file_name, t_files_lst *prev, t_files_lst *next)
 {
 	t_files_lst *elem;
 	
@@ -12,6 +12,7 @@ t_files_lst *ft_add_file(char *file_name, t_files_lst *prev, t_files_lst *next)
 	elem->f_name = ft_strdup(file_name);
 	elem->next = next;
 	elem->prev = prev;
+	elem->stat = e->stat_tmp;
 	return (elem);
 }
 
@@ -51,7 +52,7 @@ int 	ft_insert_file(t_env *e, char *file_name)
 
 	if (!(e->fil_lst))
 	{
-		e->fil_lst = ft_add_file(file_name, NULL, NULL);
+		e->fil_lst = ft_add_file(e, file_name, NULL, NULL);
 	}
 	else
 	{
@@ -61,12 +62,12 @@ int 	ft_insert_file(t_env *e, char *file_name)
 			tmp = ft_sort_f(e->fil_lst, file_name);		
 		if(tmp && !tmp->prev)
 		{
-			tmp->prev = ft_add_file(file_name, NULL, tmp);
+			tmp->prev = ft_add_file(e, file_name, NULL, tmp);
 			e->fil_lst = tmp->prev;
 		}
 		else if (tmp)
 		{
-			tmp->prev->next = ft_add_file(file_name, tmp->prev, tmp);
+			tmp->prev->next = ft_add_file(e, file_name, tmp->prev, tmp);
 			tmp->prev = tmp->prev->next;
 		}
 		else
@@ -74,7 +75,7 @@ int 	ft_insert_file(t_env *e, char *file_name)
 			tmp = e->fil_lst;
 			while (tmp->next)
 				tmp = tmp->next;
-			tmp->next = ft_add_file(file_name, tmp, NULL);
+			tmp->next = ft_add_file(e, file_name, tmp, NULL);
 		}
 
 	}

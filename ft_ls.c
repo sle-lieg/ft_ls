@@ -1,29 +1,89 @@
 #include "ft_ls.h"
- 
+
+void 	ft_put_mode(t_env *e, t_files_lst *fil_lst)
+{
+	unsigned short test;
+/*	unsigned int user_mask;
+	unsigned int grp_mask;
+	unsigned int oth_mask;
+	int 		 i;
+
+	user_mask = fil_lst->stat.st_mode & S_IRWXU;
+	grp_mask = fil_lst->stat.st_mode & S_IRWXG;
+	oth_mask = fil_lst->stat.st_mode & S_IRWXO;
+
+	i = 0;
+	test = fil_lst->stat.st_mode & S_IFMT;
+	while (test != e->modes[i] && i < 2)
+		i++;
+	ft_putchar(e->modes_char[i]);
+	while (user_mask != e->modes[i] && i < 2)
+		i++;
+*/
+	test = 0;
+	test = fil_lst->stat.st_mode & 0x0000777;
+	printf("++%d\n", test);
+	printf("++%d\n", test >> 3);
+	printf("++%d\n", test >> 6);
+	printf("++%d\n", test >> 3);
+	printf("++%d\n", test >> 4);
+	printf("++%d\n", test >> 5);
+	printf("++%d\n", test >> 6);
+	printf("++%d\n", test >> 7);
+	printf("++%d\n", test >> 8);
+	printf("++%d\n", test >> 9);
+	printf("++%d\n", test >> 10);
+//	write(1, "\n", 1);
+
+}
+
+void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
+{
+	//printf("%d\n", fil_lst->stat.st_mode);
+	ft_put_mode(e, fil_lst);
+
+	// print 
+}
+
 int		ft_print_files(t_env *e)
 {
 	t_files_lst *tmp;
+	int 		printed;
 
+	printed = 0;
 	tmp = e->fil_lst;
+	if (tmp && e->options[1][0] > '0')
+	{
+		write(1, "total ", 6);
+		ft_putnbr(e->dir_lst->blocks_size);
+		write(1, "\n", 1);
+	}
 	while (tmp)
 	{
 		if (tmp->f_name[0] != '.' || e->options[1][1] > '0')
 		{
-			ft_putstr(tmp->f_name);
-			write(1, " ", 1);
+			if (e->options[1][0] > '0')
+			{
+				ft_print_l(e, tmp);
+			}
+			else
+			{
+				ft_putstr(tmp->f_name);
+				write(1, " ", 1);
+			}
+			printed = 1;
 		}
 		tmp = tmp->next;
 	}
-	write(1, "\n", 1);
+	if (printed)
+		write(1, "\n", 1);
 	return (0);
 }
 
 int 	ft_tmp_lst(t_env *e, char *dir_name, char *path_name)
 {
 	t_dir_lst *tmp;
-	//char *path_name;
 
-//	path_name = ft_get_path_name(e->dir_lst->d_name, '/', dir_name);
 	if (!(e->tmp_lst))
 	{
 		e->tmp_lst = ft_add_dir(path_name, dir_name, NULL, NULL);
@@ -99,21 +159,23 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 
 	if (!(dir_lst->dir = opendir(dir_lst->path)))
 	{
-		perror("ft_ls.c --> line 109 ");
-		getchar();
+		ft_putstr(dir_lst->path);
+		write(1, "\nls: ", 5);
+		perror(dir_lst->d_name);
 		return(0);
 	}
 	while ((elem = readdir(dir_lst->dir)))
 	{
 		path_name = ft_get_path(e, elem->d_name);
-		if (!(stat(path_name, &(e->stat_tmp))))
+		if (!(lstat(path_name, &(e->stat_tmp))))
 		{
-			if ((S_ISDIR(e->stat_tmp.st_mode) && (e->stat_tmp.st_mode & (S_IRGRP | S_IROTH))
-			 && e->options[1][4] > '0' && (e->options[1][1] > '0' || elem->d_name[0] != '.')))
+			if ((S_ISDIR(e->stat_tmp.st_mode)/* && !(S_ISLNK(e->stat_tmp.st_mode)) && (e->stat_tmp.st_mode & (S_IRGRP | S_IROTH))*/
+			 && e->options[1][4] > '0' && elem->d_name[0] != '.'))
 			{
 				ft_tmp_lst(e, elem->d_name, path_name);
 			}
 			ft_insert_file(e, elem->d_name);
+			e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
 		}
 	}
 	if (dir_lst->prev || dir_lst->next)
