@@ -14,13 +14,21 @@ static void ft_init_opt(t_env *e)
 	e->options[1][3] = '0';
 	e->options[1][4] = '0';
 
-	e->modes[0] = S_IFDIR;
-	e->modes[1] = S_IFREG;
+	e->modes[0] = S_IFREG;
+	e->modes[1] = S_IFDIR;
 	e->modes[2] = S_IFLNK;
+	e->modes[3] = S_IFIFO;
+	e->modes[4] = S_IFCHR;
+	e->modes[5] = S_IFBLK;
+	e->modes[6] = S_IFSOCK;
 
-	e->modes_char[0] = 'd';
-	e->modes_char[1] = '-';
+	e->modes_char[0] = '-';
+	e->modes_char[1] = 'd';
 	e->modes_char[2] = 'l';
+	e->modes_char[3] = 'p';
+	e->modes_char[4] = 'c';
+	e->modes_char[5] = 'b';
+	e->modes_char[6] = 's';	
 }
 
 t_env *ft_init(void)

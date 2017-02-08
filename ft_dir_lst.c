@@ -14,6 +14,7 @@ t_dir_lst *ft_add_dir(char *path_name, char *dir_name, t_dir_lst *prev, t_dir_ls
 	elem->prev = prev;
 	elem->dir = NULL;
 	elem->blocks_size = 0;
+	elem->nb_lnk = 0;
 	elem->path = path_name;
 	return (elem);
 }
@@ -79,4 +80,13 @@ int 	ft_insert_dir(t_env *e, char *dir_name)
 		}
 	}
 	return (0);
+}
+
+void ft_destroy_dir(t_dir_lst *dir)
+{
+	if (dir->d_name)
+		free(dir->d_name);
+	if (dir->dir && (-1 == (closedir(dir->dir))))
+		perror("ft_ls.c --> line 117 ");
+	free(dir);
 }

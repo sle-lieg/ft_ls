@@ -81,3 +81,18 @@ int 	ft_insert_file(t_env *e, char *file_name)
 	}
 	return(0);
 }
+
+void ft_destroy_fil_lst(t_env *e)
+{
+	t_files_lst *tmp;
+
+	while (e->fil_lst)
+	{
+		tmp = e->fil_lst;
+		e->fil_lst = e->fil_lst->next;
+		if (tmp->f_name)
+			free(tmp->f_name);
+		free(tmp);
+	}
+	e->fil_lst = NULL;
+}
