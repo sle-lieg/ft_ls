@@ -16,7 +16,7 @@ typedef struct 	s_buf
 {
 	char buff[5000];
 	char *p;
-	
+
 }				t_buf;
 
 typedef struct s_files_lst
@@ -76,6 +76,8 @@ int 		ft_read_dir(t_env *e, t_dir_lst *dir_lst);
 int 		ft_tmp_lst(t_env *e, char *dir_name, char *path_name);
 int 		ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
 char 		*ft_get_path(t_env *e, char *file_name);
+char 		*ft_join_sep(char *s1, char *s2, char c);
+
 
 /* ***** print_file.c ***** */
 int			ft_print_files(t_env *e);

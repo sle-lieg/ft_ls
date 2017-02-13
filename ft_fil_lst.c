@@ -59,7 +59,7 @@ int 	ft_insert_file(t_env *e, char *file_name)
 		if (e->options[1][2] > '0')
 			tmp = ft_sort_frev(e->fil_lst, file_name);
 		else
-			tmp = ft_sort_f(e->fil_lst, file_name);		
+			tmp = ft_sort_f(e->fil_lst, file_name);
 		if(tmp && !tmp->prev)
 		{
 			tmp->prev = ft_add_file(e, file_name, NULL, tmp);
@@ -92,7 +92,8 @@ void ft_destroy_fil_lst(t_env *e)
 		e->fil_lst = e->fil_lst->next;
 		if (tmp->f_name)
 			free(tmp->f_name);
-		free(tmp);
+		if (tmp)
+			free(tmp);
 	}
 	e->fil_lst = NULL;
 }
