@@ -26,8 +26,8 @@ int ft_ls(t_env *e)
 		write(1, "\n", 1);
 	while (tmp)
 	{
-		// if (e->fil_lst)
-		// 	ft_destroy_fil_lst(e);
+		if (e->fil_lst)
+			ft_destroy_fil_lst(e);
 		ft_read_dir(e, tmp);
 		if (tmp->prev || tmp->next)
 		{

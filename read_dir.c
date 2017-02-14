@@ -15,21 +15,6 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	}
 	while ((elem = readdir(dir_lst->dir)))
 	{
-	
-
-
-		if (!elem)
-		{}
-
-
-
-
-
-
-
-
-
-
 		//path_name = ft_get_path(e, elem->d_name);
 		path_name = ft_join_sep(dir_lst->path, elem->d_name, '/');
 		if (!(lstat(path_name, &(e->stat_tmp))))
@@ -44,7 +29,7 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 			if (e->stat_tmp.st_nlink > dir_lst->nb_lnk)
 				dir_lst->nb_lnk = e->stat_tmp.st_nlink;
 		}
-//		free(path_name);
+		free(path_name);
 	}
 	// if (dir_lst->nb_lnk > 100)
 	// 	dir_lst->nb_lnk = 100;
@@ -126,7 +111,7 @@ char *ft_join_sep(char *s1, char *s2, char c)
 	char *new;
 	char *p;
 
-	if (!(new = (char*)malloc(sizeof(ft_strlen(s1) + ft_strlen(s2) + 2))))
+	if (!(new = (char*)malloc(sizeof(*s1) * ((ft_strlen(s1) + ft_strlen(s2) + 2)))))
 		return(NULL);
 	p = new;
 	if (s1)

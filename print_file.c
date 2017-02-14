@@ -64,6 +64,11 @@ int		ft_print_files(t_env *e)
 	t_files_lst *tmp;
 	int 		printed;
 
+	static char buff[4096];
+
+	ft_bzero(buff, 4096);
+
+
 	printed = 0;
 	tmp = e->fil_lst;
 	if (tmp && e->options[1][0] > '0')
