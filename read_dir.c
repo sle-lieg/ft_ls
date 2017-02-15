@@ -26,7 +26,12 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 			}
 			ft_insert_file(e, elem->d_name);
 			e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
-			if (e->stat_tmp.st_nlink > dir_lst->nb_lnk)
+	
+			//if (e->options[1][0] > '0')
+			//	ft_get_limit(e);
+
+			if (e->stat_tmp.st_nlink > dir_lst->nb_lnk &&
+				(elem->d_name[0] != '.' || e->options[1][1] > '0'))
 				dir_lst->nb_lnk = e->stat_tmp.st_nlink;
 		}
 		free(path_name);
@@ -48,6 +53,11 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 		e->tmp_lst = NULL;
 	}
 	return (0);
+}
+
+int 	ft_get_limit(e)
+{
+	
 }
 
 int 	ft_tmp_lst(t_env *e, char *dir_name, char *path_name)

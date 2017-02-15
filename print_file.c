@@ -31,19 +31,22 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 	*p++ = ((mask >> 8 & fil_lst->stat.st_mode) ? 'x' : '-');
 
 	*p++ = ' ';
-	//*p++ = '\n';
+	*p++ = ' ';
 
-	//ft_putstr(buff);
-	//write(1, "\n", 1);
 	return (p);
 }
 
 char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	(void)e;
 	char *tmp;
+	int len_max;
+	int len;
 
+	len_max = ft_strlen(ft_itoa(e->dir_lst->nb_lnk));
 	tmp = ft_itoa(fil_lst->stat.st_nlink);
+	len = ft_strlen(tmp);
+	while (len++ < len_max)
+		*p++ = ' ';
 	while (tmp && *tmp)
 		*p++ = *tmp++;
 	*p++ = ' ';
@@ -52,20 +55,98 @@ char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 
 char 	*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	//char *tmp;
+	(void)e;
 
-	*p |= fil_lst->stat.st_uid;
-	while (p && *p)
-		*p++ -= '0';
-	// while (tmp && *tmp)
-	// {
-	// 	*p++ = *tmp++;
-	// }
+	struct passwd *passwd;
+
+	passwd = getpwuid(fil_lst->stat.st_uid);
+	ft_strcpy(p, passwd->pw_name);
 	while (*p)
 		p++;
-	*p++ = '\n';
+	*p++ = ' ';
 	return (p);
 }
+
+char 	*ft_put_gid(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	(void)e;
+
+	struct group *grp;
+	grp = getgrgid(fil_lst->stat.st_gid);
+	ft_strcpy(p, grp->gr_name);
+	while (*p)
+		p++;
+	*p++ = ' ';
+	return (p);
+}
+
+char 	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	(void)e;
+
+	char *tmp;
+
+	tmp = ft_itoa(fil_lst->stat.st_size);
+	if (tmp)
+	{
+		while (*tmp)
+		{
+			*p++ = *tmp++;
+		}
+	}
+	*p++ = ' ';
+	return (p);
+}
+
+char 	*ft_put_date(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	(void)e;
+
+	char *tmp;
+	int i;
+
+	tmp = ctime(&fil_lst->stat.st_mtimespec.tv_sec);
+	i = 3;
+	if (tmp)
+	{
+		while (++i < 16)
+		{
+			*p++ = *(tmp + i);
+		}
+	}
+	*p++ = ' ';
+	return (p);
+}
+
+char 	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	(void)e;
+	
+	char 	tmp[512];
+	int 	ret;
+	
+	ft_strcpy(p, fil_lst->f_name);
+	if (S_ISLNK(fil_lst->stat.st_mode))
+	{
+		ft_bzero(&tmp, 512);
+		while (*p)
+			p++;
+		ret = readlink(fil_lst->f_name, tmp, 512);
+		{
+			if (ret == -1)
+				perror("");
+			else
+			{
+				tmp[ret] = '\0';
+				ft_strcpy(p, " -> ");
+				p += 4;
+				ft_strcpy(p, tmp);
+			}
+		}
+	}
+	return (p);
+}
+
 
 void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 {
@@ -77,12 +158,13 @@ void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	p = ft_put_mode(e, p, fil_lst);
 	p = ft_put_nb_lnk(e, p, fil_lst);
 	p = ft_put_uid(e, p, fil_lst);
-	
-
-
+	p = ft_put_gid(e, p, fil_lst);
+	p = ft_put_size(e, p, fil_lst);
+	p = ft_put_date(e, p, fil_lst);
+	p = ft_put_name(e, p, fil_lst);
 
 	ft_putstr(buff);	
-
+	write(1, "\n", 1);
 	// print 
 }
 

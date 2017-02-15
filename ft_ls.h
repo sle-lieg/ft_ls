@@ -8,6 +8,10 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <sys/types.h>
+#include <pwd.h>
+#include <grp.h>
+#include <uuid/uuid.h>
+#include <time.h>
 #include "libft/libft.h"
 
 typedef struct 	s_buf
@@ -30,8 +34,11 @@ typedef struct s_dir_lst
 {
 	char 				*d_name;
 	char 				*path;
+
 	off_t 				blocks_size;
+
 	nlink_t 			nb_lnk;
+	
 	DIR 				*dir;
 	struct s_dir_lst 	*next;
 	struct s_dir_lst 	*prev;
@@ -83,6 +90,10 @@ void 		ft_print_l(t_env *e, t_files_lst *fil_lst);
 char 		*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst);
 char 		*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst);
 char 		*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst);
+char 		*ft_put_gid(t_env *e, char *p, t_files_lst *fil_lst);
+char 		*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst);
+char 		*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst);
+
 
 
 /* ***** ft_ls.c ***** */
