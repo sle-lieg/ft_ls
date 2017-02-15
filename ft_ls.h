@@ -10,8 +10,6 @@
 #include <sys/types.h>
 #include "libft/libft.h"
 
-#define SET_MODE "d-l"
-
 typedef struct 	s_buf
 {
 	char buff[5000];
@@ -83,6 +81,9 @@ char 		*ft_join_sep(char *s1, char *s2, char c);
 int			ft_print_files(t_env *e);
 void 		ft_print_l(t_env *e, t_files_lst *fil_lst);
 char 		*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst);
+char 		*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst);
+char 		*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst);
+
 
 /* ***** ft_ls.c ***** */
 void 		ft_reset_tmp_lst(t_dir_lst *tmp_lst);

@@ -31,19 +31,41 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 	*p++ = ((mask >> 8 & fil_lst->stat.st_mode) ? 'x' : '-');
 
 	*p++ = ' ';
-	*p++ = '\n';
+	//*p++ = '\n';
 
 	//ft_putstr(buff);
 	//write(1, "\n", 1);
 	return (p);
 }
 
-/*char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
+char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	if (fil_lst->stat.st_nlink < e->dir_lst->nb_lnk)
+	(void)e;
+	char *tmp;
 
-	while (e->dir_lst->nb_lnk)
-}*/
+	tmp = ft_itoa(fil_lst->stat.st_nlink);
+	while (tmp && *tmp)
+		*p++ = *tmp++;
+	*p++ = ' ';
+	return (p);
+}
+
+char 	*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	//char *tmp;
+
+	*p |= fil_lst->stat.st_uid;
+	while (p && *p)
+		*p++ -= '0';
+	// while (tmp && *tmp)
+	// {
+	// 	*p++ = *tmp++;
+	// }
+	while (*p)
+		p++;
+	*p++ = '\n';
+	return (p);
+}
 
 void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 {
@@ -53,7 +75,12 @@ void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	ft_bzero(&buff, 512);
 	p = buff;
 	p = ft_put_mode(e, p, fil_lst);
-	//p = ft_put_nb_lnk(e, p, fil_lst);
+	p = ft_put_nb_lnk(e, p, fil_lst);
+	p = ft_put_uid(e, p, fil_lst);
+	
+
+
+
 	ft_putstr(buff);	
 
 	// print 
