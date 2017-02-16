@@ -39,13 +39,13 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 {
 	char *tmp;
-	int len_max;
+	//int len_max;
 	int len;
 
-	len_max = ft_strlen(ft_itoa(e->dir_lst->nb_lnk));
+//	len_max = ft_strlen(ft_itoa(e->dir_lst->nb_lnk));
 	tmp = ft_itoa(fil_lst->stat.st_nlink);
 	len = ft_strlen(tmp);
-	while (len++ < len_max)
+	while (len++ < e->limit->len_lnk)
 		*p++ = ' ';
 	while (tmp && *tmp)
 		*p++ = *tmp++;
@@ -55,44 +55,50 @@ char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 
 char 	*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	(void)e;
-
-	struct passwd *passwd;
+	struct passwd 	*passwd;
+	int 			len;
 
 	passwd = getpwuid(fil_lst->stat.st_uid);
+	len = ft_strlen(passwd->pw_name);
 	ft_strcpy(p, passwd->pw_name);
-	while (*p)
-		p++;
+	p += len;
+	while (len++ < e->limit->len_uid)
+		*p++ = ' ';
+	*p++ = ' ';
 	*p++ = ' ';
 	return (p);
 }
 
 char 	*ft_put_gid(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	(void)e;
+	struct group 	*grp;
+	int 			len;
 
-	struct group *grp;
 	grp = getgrgid(fil_lst->stat.st_gid);
+	len = ft_strlen(grp->gr_name);	
 	ft_strcpy(p, grp->gr_name);
-	while (*p)
-		p++;
+	p += len;
+	while (len++ < e->limit->len_gid)
+		*p++ = ' ';
+	*p++ = ' ';
 	*p++ = ' ';
 	return (p);
 }
 
 char 	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	(void)e;
-
-	char *tmp;
+	char 	*tmp;
+	int 	len;
 
 	tmp = ft_itoa(fil_lst->stat.st_size);
-	if (tmp)
+	len = ft_strlen(tmp);
+	while (len++ < e->limit->len_size)
+		*p++ = ' ';
+	// ft_strcpy(p, tmp);
+	// p += len;
+	while (*tmp)
 	{
-		while (*tmp)
-		{
-			*p++ = *tmp++;
-		}
+		*p++ = *tmp++;
 	}
 	*p++ = ' ';
 	return (p);
@@ -123,6 +129,7 @@ char 	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
 	(void)e;
 	
 	char 	tmp[512];
+	char 	*path;
 	int 	ret;
 	
 	ft_strcpy(p, fil_lst->f_name);
@@ -131,10 +138,13 @@ char 	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
 		ft_bzero(&tmp, 512);
 		while (*p)
 			p++;
-		ret = readlink(fil_lst->f_name, tmp, 512);
+		path = ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/');
+		ret = readlink(path, tmp, 512);
 		{
 			if (ret == -1)
+			{
 				perror("");
+			}
 			else
 			{
 				tmp[ret] = '\0';
@@ -168,6 +178,14 @@ void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	// print 
 }
 
+void 	ft_reset_limit(t_env *e)
+{
+	e->limit->len_lnk = 0;
+	e->limit->len_uid = 0;
+	e->limit->len_gid = 0;
+	e->limit->len_size = 0;
+}
+
 int		ft_print_files(t_env *e)
 {
 	t_files_lst *tmp;
@@ -176,7 +194,6 @@ int		ft_print_files(t_env *e)
 	static char buff[4096];
 
 	ft_bzero(buff, 4096);
-
 
 	printed = 0;
 	tmp = e->fil_lst;
@@ -188,6 +205,10 @@ int		ft_print_files(t_env *e)
 	}
 	while (tmp)
 	{
+		// printf("len_lnk = %d\n", e->limit->len_lnk);
+		// printf("len_uid = %d\n", e->limit->len_uid);
+		// printf("len_gid = %d\n", e->limit->len_gid);
+		// printf("len_size = %d\n", e->limit->len_size);
 		if (tmp->f_name[0] != '.' || e->options[1][1] > '0')
 		{
 			if (e->options[1][0] > '0')
@@ -203,6 +224,7 @@ int		ft_print_files(t_env *e)
 		}
 		tmp = tmp->next;
 	}
+	ft_reset_limit(e);
 	if (printed)
 		write(1, "\n", 1);
 	return (0);

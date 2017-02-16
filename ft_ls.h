@@ -21,10 +21,19 @@ typedef struct 	s_buf
 
 }				t_buf;
 
+typedef struct 	s_limit
+{
+	int 				len_lnk;
+	int 				len_uid;
+	int 				len_gid;
+	int 				len_size;
+}				t_limit;
+
 typedef struct s_files_lst
 {
 	char 				*f_name;
 	struct stat 		stat;
+
 	struct s_files_lst 	*next;
 	struct s_files_lst 	*prev;
 
@@ -36,9 +45,8 @@ typedef struct s_dir_lst
 	char 				*path;
 
 	off_t 				blocks_size;
-
 	nlink_t 			nb_lnk;
-	
+
 	DIR 				*dir;
 	struct s_dir_lst 	*next;
 	struct s_dir_lst 	*prev;
@@ -49,6 +57,7 @@ typedef struct 	s_env
 {
 	char **options;
 //	struct s_arg *arg_lst;
+	struct s_limit 		*limit;
 	struct s_dir_lst 	*dir_lst;
 	struct s_files_lst 	*fil_lst;
 	struct s_dir_lst 	*tmp_lst;
@@ -93,6 +102,9 @@ char 		*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst);
 char 		*ft_put_gid(t_env *e, char *p, t_files_lst *fil_lst);
 char 		*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst);
 char 		*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst);
+void	 	ft_reset_limit(t_env *e);
+void 		ft_get_limit(t_env *e, char *name);
+
 
 
 

@@ -47,10 +47,16 @@ t_env *ft_init(void)
 			return (NULL);
 		e->options[i][5] = '\0';
 	}
+	if (!(e->limit = (t_limit*)malloc(sizeof(t_limit))))
+		return (NULL);
 	ft_init_opt(e);
 	e->dir_lst = NULL;
 	e->fil_lst = NULL;
 	e->tmp_lst = NULL;
+	e->limit->len_lnk = 0;
+	e->limit->len_uid = 0;
+	e->limit->len_gid = 0;
+	e->limit->len_size = 0;
 	return (e);
 }
 
@@ -100,13 +106,18 @@ t_env 	*ft_parse(int argc, char **argv)
 				write(1, "ls: ", 4);
 				perror(argv[i]);
 			}
-			else if ((S_ISDIR(e->stat_tmp.st_mode)))
-			{
-				ft_insert_dir(e, argv[i]);
-			}
 			else
 			{
-				ft_insert_file(e, argv[i]);
+				if ((S_ISDIR(e->stat_tmp.st_mode)))
+				{
+					ft_insert_dir(e, argv[i]);
+				}
+				else
+				{
+					ft_insert_file(e, argv[i]);
+					if (e->options[1][0] > '0')
+						ft_get_limit(e, argv[i]);
+				}
 			}
 		}
 	}

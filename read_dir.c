@@ -25,14 +25,13 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 				ft_tmp_lst(e, elem->d_name, path_name);
 			}
 			ft_insert_file(e, elem->d_name);
-			e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
-	
-			//if (e->options[1][0] > '0')
-			//	ft_get_limit(e);
-
-			if (e->stat_tmp.st_nlink > dir_lst->nb_lnk &&
-				(elem->d_name[0] != '.' || e->options[1][1] > '0'))
-				dir_lst->nb_lnk = e->stat_tmp.st_nlink;
+			if (!S_ISREG(e->stat_tmp.st_mode))
+			{
+				printf("%s -> %lld\n",elem->d_name, e->stat_tmp.st_blocks);
+				e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
+			}
+			if (e->options[1][0] > '0')
+				ft_get_limit(e, elem->d_name);
 		}
 		free(path_name);
 	}
@@ -55,9 +54,29 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	return (0);
 }
 
-int 	ft_get_limit(e)
+void 	ft_get_limit(t_env *e, char *name)
 {
-	
+	struct passwd 	*password;
+	struct group 	*grp;
+	int 			len;
+
+	len = ft_strlen(ft_itoa(e->stat_tmp.st_nlink));
+	if (len > e->limit->len_lnk && (*name != '.' || e->options[1][1] > '0'))
+		e->limit->len_lnk = len;
+
+	password = getpwuid(e->stat_tmp.st_uid);
+	len = ft_strlen(password->pw_name);
+	if (len > e->limit->len_uid && (*name != '.' || e->options[1][1] > '0'))
+		e->limit->len_uid = len;
+
+	grp = getgrgid(e->stat_tmp.st_gid);
+	len = ft_strlen(grp->gr_name);
+	if (len > e->limit->len_gid && (*name != '.' || e->options[1][1] > '0'))
+		e->limit->len_gid = len;
+
+	len = ft_strlen(ft_itoa(e->stat_tmp.st_size));
+	if (len > e->limit->len_size && (*name != '.' || e->options[1][1] > '0'))
+		e->limit->len_size = len;
 }
 
 int 	ft_tmp_lst(t_env *e, char *dir_name, char *path_name)
