@@ -7,12 +7,14 @@ static void ft_init_opt(t_env *e)
 	e->options[0][2] = 'r';
 	e->options[0][3] = 't';
 	e->options[0][4] = 'R';
+	e->options[0][5] = '1';
 
 	e->options[1][0] = '0';
 	e->options[1][1] = '0';
 	e->options[1][2] = '0';
 	e->options[1][3] = '0';
 	e->options[1][4] = '0';
+	e->options[1][5] = '0';
 
 	e->modes[0] = S_IFREG;
 	e->modes[1] = S_IFDIR;
@@ -45,7 +47,7 @@ t_env *ft_init(void)
 	{
 		if (!(e->options[i] = (char*)malloc(sizeof(char) * 6)))
 			return (NULL);
-		e->options[i][5] = '\0';
+		e->options[i][6] = '\0';
 	}
 	if (!(e->limit = (t_limit*)malloc(sizeof(t_limit))))
 		return (NULL);
@@ -66,14 +68,14 @@ void 	ft_get_option(char **options, char *str)
 	while (*++p)
 	{
 		i = -1;
-		while (++i < 5)
+		while (++i < 6)
 		{
 			if (options[0][i] == *p)
 			{
 				options[1][i] += 1;
 				break;
 			}
-			if (i == 4)
+			if (i > 5)
 			{
 				write(1, "ls: illegal option -- ", 22);
 				write(1, p, 1);

@@ -8,8 +8,12 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	path_name = NULL;
 	if (!(dir_lst->dir = opendir(dir_lst->path)))
 	{
-		ft_putstr(dir_lst->path);
-		write(1, ":\nls: ", 6);
+		if (dir_lst->next)
+		{
+			ft_putstr(dir_lst->path);
+			write(1, ":\n", 2);	
+		}
+		write(2, "ls: ", 4);
 		perror(dir_lst->d_name);
 		return(0);
 	}

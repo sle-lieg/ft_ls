@@ -89,12 +89,8 @@ char 	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 	len = ft_strlen(tmp);
 	while (len++ < e->limit->len_size)
 		*p++ = ' ';
-	// ft_strcpy(p, tmp);
-	// p += len;
 	while (*tmp)
-	{
 		*p++ = *tmp++;
-	}
 	*p++ = ' ';
 	return (p);
 }
@@ -137,7 +133,7 @@ char 	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
 		ret = readlink(path, tmp, 512);
 		{
 			if (ret == -1)
-			{
+			{				
 				perror("");
 			}
 			else
@@ -210,7 +206,12 @@ int		ft_print_files(t_env *e)
 			{
 				ft_putstr(tmp->f_name);
 				if (tmp->next)
-					write(1, " ", 1);
+				{
+					if (e->options[1][5] > '0')
+						write(1, "\n", 1);
+					else
+						write(1, " ", 1);
+				}
 				else
 					write(1, "\n", 1);
 			}

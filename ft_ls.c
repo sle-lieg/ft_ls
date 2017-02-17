@@ -26,10 +26,7 @@ int ft_ls(t_env *e)
 		write(1, "\n\n", 2);
 	while (tmp)
 	{
-		// if (e->fil_lst)
-		// 	ft_destroy_fil_lst(e);
-		// ft_read_dir(e, tmp);
-		if (e->fil_lst /*tmp->prev || tmp->next*/)
+		if (e->fil_lst || e->dir_lst->next)
 		{
 			ft_putstr(tmp->path);
 			write(1, ":\n", 2);
@@ -55,9 +52,6 @@ int main(int argc, char **argv)
 
 	if (!(e = ft_parse(argc, argv)))
 		return (-1);
-	//ft_open_arg_lst(e);
-
-//	ft_putlst(e);
 	ft_ls(e);
 	return (0);
 }
