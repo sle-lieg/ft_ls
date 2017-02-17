@@ -50,13 +50,10 @@ t_env *ft_init(void)
 	if (!(e->limit = (t_limit*)malloc(sizeof(t_limit))))
 		return (NULL);
 	ft_init_opt(e);
+	ft_reset_limit(e);
 	e->dir_lst = NULL;
 	e->fil_lst = NULL;
 	e->tmp_lst = NULL;
-	e->limit->len_lnk = 0;
-	e->limit->len_uid = 0;
-	e->limit->len_gid = 0;
-	e->limit->len_size = 0;
 	return (e);
 }
 

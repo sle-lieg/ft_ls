@@ -9,7 +9,7 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 	if (!(dir_lst->dir = opendir(dir_lst->path)))
 	{
 		ft_putstr(dir_lst->path);
-		write(1, "\nls: ", 5);
+		write(1, ":\nls: ", 6);
 		perror(dir_lst->d_name);
 		return(0);
 	}
@@ -25,9 +25,9 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 				ft_tmp_lst(e, elem->d_name, path_name);
 			}
 			ft_insert_file(e, elem->d_name);
-			if (!S_ISREG(e->stat_tmp.st_mode))
+			if (elem->d_name[0] != '.' || (elem->d_name[0] == '.' && e->options[1][1] > '0'))
 			{
-				printf("%s -> %lld\n",elem->d_name, e->stat_tmp.st_blocks);
+				//printf("%s -> %lld\n",elem->d_name, e->stat_tmp.st_blocks);
 				e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
 			}
 			if (e->options[1][0] > '0')
@@ -35,17 +35,6 @@ int ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 		}
 		free(path_name);
 	}
-	// if (dir_lst->nb_lnk > 100)
-	// 	dir_lst->nb_lnk = 100;
-	// else if (dir_lst->nb_lnk > 10)
-	// 	dir_lst->nb_lnk = 10;
-	// else
-	// 	dir_lst->nb_lnk = 0;
-	// if (dir_lst->prev || dir_lst->next)
-	// {
-	// 	ft_putstr(dir_lst->path);
-	// 	write(1, ":\n", 2);
-	// }
 	if (e->tmp_lst)
 	{
 		ft_merge_lst(e, dir_lst);

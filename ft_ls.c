@@ -23,17 +23,21 @@ int ft_ls(t_env *e)
 	tmp = e->dir_lst;
 	ft_print_files(e);
 	if (e->fil_lst)
-		write(1, "\n", 1);
+		write(1, "\n\n", 2);
 	while (tmp)
 	{
-		if (e->fil_lst)
-			ft_destroy_fil_lst(e);
-		ft_read_dir(e, tmp);
-		if (tmp->prev || tmp->next)
+		// if (e->fil_lst)
+		// 	ft_destroy_fil_lst(e);
+		// ft_read_dir(e, tmp);
+		if (e->fil_lst /*tmp->prev || tmp->next*/)
 		{
 			ft_putstr(tmp->path);
 			write(1, ":\n", 2);
 		}
+		if (e->fil_lst)
+			ft_destroy_fil_lst(e);
+		ft_read_dir(e, tmp);
+
 		ft_print_files(e);
 		e->dir_lst = e->dir_lst->next;
 		ft_destroy_dir(tmp);

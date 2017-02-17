@@ -21,15 +21,12 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 	*p++ = ((mask & fil_lst->stat.st_mode) ? 'r' : '-');
 	*p++ = ((mask >> 1 & fil_lst->stat.st_mode) ? 'w' : '-');
 	*p++ = ((mask >> 2 & fil_lst->stat.st_mode) ? 'x' : '-');
-
 	*p++ = ((mask >> 3 & fil_lst->stat.st_mode) ? 'r' : '-');
 	*p++ = ((mask >> 4 & fil_lst->stat.st_mode) ? 'w' : '-');
 	*p++ = ((mask >> 5 & fil_lst->stat.st_mode) ? 'x' : '-');
-
 	*p++ = ((mask >> 6 & fil_lst->stat.st_mode) ? 'r' : '-');
 	*p++ = ((mask >> 7 & fil_lst->stat.st_mode) ? 'w' : '-');
 	*p++ = ((mask >> 8 & fil_lst->stat.st_mode) ? 'x' : '-');
-
 	*p++ = ' ';
 	*p++ = ' ';
 
@@ -39,10 +36,8 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 {
 	char *tmp;
-	//int len_max;
 	int len;
 
-//	len_max = ft_strlen(ft_itoa(e->dir_lst->nb_lnk));
 	tmp = ft_itoa(fil_lst->stat.st_nlink);
 	len = ft_strlen(tmp);
 	while (len++ < e->limit->len_lnk)
@@ -175,7 +170,6 @@ void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 
 	ft_putstr(buff);	
 	write(1, "\n", 1);
-	// print 
 }
 
 void 	ft_reset_limit(t_env *e)
@@ -191,41 +185,42 @@ int		ft_print_files(t_env *e)
 	t_files_lst *tmp;
 	int 		printed;
 
-	static char buff[4096];
+	// static char buff[4096];
 
-	ft_bzero(buff, 4096);
+	// ft_bzero(buff, 4096);
 
 	printed = 0;
 	tmp = e->fil_lst;
-	if (tmp && e->options[1][0] > '0')
-	{
-		write(1, "total ", 6);
-		ft_putnbr(e->dir_lst->blocks_size);
-		write(1, "\n", 1);
-	}
 	while (tmp)
 	{
-		// printf("len_lnk = %d\n", e->limit->len_lnk);
-		// printf("len_uid = %d\n", e->limit->len_uid);
-		// printf("len_gid = %d\n", e->limit->len_gid);
-		// printf("len_size = %d\n", e->limit->len_size);
 		if (tmp->f_name[0] != '.' || e->options[1][1] > '0')
 		{
 			if (e->options[1][0] > '0')
 			{
+				if (!printed)
+				{
+					//printf("++++%s\n", tmp->f_name);
+					write(1, "total ", 6);
+					ft_putnbr(e->dir_lst->blocks_size);
+					write(1, "\n", 1);
+				}
 				ft_print_l(e, tmp);
 			}
 			else
 			{
 				ft_putstr(tmp->f_name);
-				write(1, " ", 1);
+				if (tmp->next)
+					write(1, " ", 1);
+				else
+					write(1, "\n", 1);
 			}
 			printed = 1;
 		}
 		tmp = tmp->next;
 	}
 	ft_reset_limit(e);
-	if (printed)
-		write(1, "\n", 1);
+	// if (printed && e->options[1][0] > '0')
+	//  	write(1, "\n", 1);
 	return (0);
 }
+
