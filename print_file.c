@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   print_file.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/02/18 20:11:49 by sle-lieg          #+#    #+#             */
+/*   Updated: 2017/02/18 22:38:30 by sle-lieg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
+char	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	unsigned short 	test;
-	int 		 	i;
-	unsigned short 	mask;
+	unsigned short	test;
+	int				i;
+	unsigned short	mask;
 
 	mask = 0x100;
 	i = 0;
@@ -14,10 +26,7 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 	if (i < 7)
 		*p++ = e->modes_char[i];
 	else
-	{
-		write (1, "unknown file type", 17);
 		exit(0);
-	}
 	*p++ = ((mask & fil_lst->stat.st_mode) ? 'r' : '-');
 	*p++ = ((mask >> 1 & fil_lst->stat.st_mode) ? 'w' : '-');
 	*p++ = ((mask >> 2 & fil_lst->stat.st_mode) ? 'x' : '-');
@@ -29,65 +38,21 @@ char 	*ft_put_mode(t_env *e, char *p, t_files_lst *fil_lst)
 	*p++ = ((mask >> 8 & fil_lst->stat.st_mode) ? 'x' : '-');
 	*p++ = ' ';
 	*p++ = ' ';
-
 	return (p);
 }
 
-char 	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
+char	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 {
-	char *tmp;
-	int len;
+	char	*tmp;
+	int		len;
 
-	tmp = ft_itoa(fil_lst->stat.st_nlink);
+	if (!(tmp = ft_itoa(fil_lst->stat.st_nlink)))
+	{
+		ft_putstr("error malloc.\n");
+		exit(0);
+	}
 	len = ft_strlen(tmp);
 	while (len++ < e->limit->len_lnk)
-		*p++ = ' ';
-	while (tmp && *tmp)
-		*p++ = *tmp++;
-	*p++ = ' ';
-	return (p);
-}
-
-char 	*ft_put_uid(t_env *e, char *p, t_files_lst *fil_lst)
-{
-	struct passwd 	*passwd;
-	int 			len;
-
-	passwd = getpwuid(fil_lst->stat.st_uid);
-	len = ft_strlen(passwd->pw_name);
-	ft_strcpy(p, passwd->pw_name);
-	p += len;
-	while (len++ < e->limit->len_uid)
-		*p++ = ' ';
-	*p++ = ' ';
-	*p++ = ' ';
-	return (p);
-}
-
-char 	*ft_put_gid(t_env *e, char *p, t_files_lst *fil_lst)
-{
-	struct group 	*grp;
-	int 			len;
-
-	grp = getgrgid(fil_lst->stat.st_gid);
-	len = ft_strlen(grp->gr_name);	
-	ft_strcpy(p, grp->gr_name);
-	p += len;
-	while (len++ < e->limit->len_gid)
-		*p++ = ' ';
-	*p++ = ' ';
-	*p++ = ' ';
-	return (p);
-}
-
-char 	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
-{
-	char 	*tmp;
-	int 	len;
-
-	tmp = ft_itoa(fil_lst->stat.st_size);
-	len = ft_strlen(tmp);
-	while (len++ < e->limit->len_size)
 		*p++ = ' ';
 	while (*tmp)
 		*p++ = *tmp++;
@@ -95,65 +60,12 @@ char 	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 	return (p);
 }
 
-char 	*ft_put_date(t_env *e, char *p, t_files_lst *fil_lst)
+void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 {
-	(void)e;
+	char buff[512];
+	char *p;
 
-	char *tmp;
-	int i;
-
-	tmp = ctime(&fil_lst->stat.st_mtimespec.tv_sec);
-	i = 3;
-	if (tmp)
-	{
-		while (++i < 16)
-		{
-			*p++ = *(tmp + i);
-		}
-	}
-	*p++ = ' ';
-	return (p);
-}
-
-char 	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
-{
-	(void)e;
-	
-	char 	tmp[512];
-	char 	*path;
-	int 	ret;
-	
-	ft_strcpy(p, fil_lst->f_name);
-	if (S_ISLNK(fil_lst->stat.st_mode))
-	{
-		ft_bzero(&tmp, 512);
-		while (*p)
-			p++;
-		path = ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/');
-		ret = readlink(path, tmp, 512);
-		{
-			if (ret == -1)
-			{				
-				perror("");
-			}
-			else
-			{
-				tmp[ret] = '\0';
-				ft_strcpy(p, " -> ");
-				p += 4;
-				ft_strcpy(p, tmp);
-			}
-		}
-	}
-	return (p);
-}
-
-
-void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
-{
-	char 			buff[512];
-	char 			*p;
-
+	printf("%s\n", e->dir_lst->d_name);
 	ft_bzero(&buff, 512);
 	p = buff;
 	p = ft_put_mode(e, p, fil_lst);
@@ -161,67 +73,48 @@ void 	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	p = ft_put_uid(e, p, fil_lst);
 	p = ft_put_gid(e, p, fil_lst);
 	p = ft_put_size(e, p, fil_lst);
-	p = ft_put_date(e, p, fil_lst);
+	p = ft_put_date(p, fil_lst);
 	p = ft_put_name(e, p, fil_lst);
-
-	ft_putstr(buff);	
+	ft_putstr(buff);
 	write(1, "\n", 1);
 }
 
-void 	ft_reset_limit(t_env *e)
+void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
 {
-	e->limit->len_lnk = 0;
-	e->limit->len_uid = 0;
-	e->limit->len_gid = 0;
-	e->limit->len_size = 0;
+	if (e->options[1][0] > '0' && e->options[1][5] == '0')
+	{
+		if (!*printed && dir)
+		{
+			write(1, "total ", 6);
+			ft_putnbr(e->dir_lst->blocks_size);
+			write(1, "\n", 1);
+		}
+		ft_print_l(e, tmp);
+	}
+	else
+	{
+		ft_putstr(tmp->f_name);
+		if (e->options[1][5] > '0' || (e->options[1][5] == '0' && !tmp->next))
+			write(1, "\n", 1);
+		else
+			write(1, " ", 1);
+	}
+	*printed = 1;
 }
 
-int		ft_print_files(t_env *e)
+int		ft_print_files(t_env *e, int dir)
 {
-	t_files_lst *tmp;
-	int 		printed;
-
-	// static char buff[4096];
-
-	// ft_bzero(buff, 4096);
+	t_files_lst	*tmp;
+	int			printed;
 
 	printed = 0;
 	tmp = e->fil_lst;
 	while (tmp)
 	{
-		if (tmp->f_name[0] != '.' || e->options[1][1] > '0')
-		{
-			if (e->options[1][0] > '0')
-			{
-				if (!printed)
-				{
-					//printf("++++%s\n", tmp->f_name);
-					write(1, "total ", 6);
-					ft_putnbr(e->dir_lst->blocks_size);
-					write(1, "\n", 1);
-				}
-				ft_print_l(e, tmp);
-			}
-			else
-			{
-				ft_putstr(tmp->f_name);
-				if (tmp->next)
-				{
-					if (e->options[1][5] > '0')
-						write(1, "\n", 1);
-					else
-						write(1, " ", 1);
-				}
-				else
-					write(1, "\n", 1);
-			}
-			printed = 1;
-		}
+		if (tmp->f_name[0] != '.' || e->options[1][1] > '0' || e->options[1][6] > '0')
+			ft_print(e, tmp, dir, &printed);
 		tmp = tmp->next;
 	}
 	ft_reset_limit(e);
-	// if (printed && e->options[1][0] > '0')
-	//  	write(1, "\n", 1);
 	return (0);
 }
-

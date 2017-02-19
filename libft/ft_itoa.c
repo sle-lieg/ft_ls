@@ -6,13 +6,13 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/13 13:12:06 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/01/06 18:04:38 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/18 22:50:22 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static int		ft_cast(long long *n)
+static int	ft_cast(long long *n)
 {
 	if (*n < 0)
 	{
@@ -22,7 +22,7 @@ static int		ft_cast(long long *n)
 	return (0);
 }
 
-char			*ft_itoa(long long n)
+char		*ft_itoa(long long n)
 {
 	static char str[0x15];
 	char		*p;

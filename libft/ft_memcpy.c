@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/04 20:41:59 by sle-lieg          #+#    #+#             */
-/*   Updated: 2016/11/26 19:51:00 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/18 22:47:31 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void		*ft_memcpy(void *dst, const void *src, size_t n)
 {
 	size_t i;
-	
+
 	i = -1;
 	while (++i < n)
 	{

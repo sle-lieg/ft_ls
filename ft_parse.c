@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_parse.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/02/18 20:11:33 by sle-lieg          #+#    #+#             */
+/*   Updated: 2017/02/18 20:19:16 by sle-lieg         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "ft_ls.h"
 
-static void ft_init_opt(t_env *e)
+static void		ft_init_opt(t_env *e)
 {
 	e->options[0][0] = 'l';
 	e->options[0][1] = 'a';
@@ -8,6 +20,7 @@ static void ft_init_opt(t_env *e)
 	e->options[0][3] = 't';
 	e->options[0][4] = 'R';
 	e->options[0][5] = '1';
+	e->options[0][6] = 'd';
 
 	e->options[1][0] = '0';
 	e->options[1][1] = '0';
@@ -15,6 +28,7 @@ static void ft_init_opt(t_env *e)
 	e->options[1][3] = '0';
 	e->options[1][4] = '0';
 	e->options[1][5] = '0';
+	e->options[1][6] = '0';
 
 	e->modes[0] = S_IFREG;
 	e->modes[1] = S_IFDIR;
@@ -30,13 +44,13 @@ static void ft_init_opt(t_env *e)
 	e->modes_char[3] = 'p';
 	e->modes_char[4] = 'c';
 	e->modes_char[5] = 'b';
-	e->modes_char[6] = 's';	
+	e->modes_char[6] = 's';
 }
 
-t_env *ft_init(void)
+t_env			*ft_init(void)
 {
-	t_env *e;
-	int i;
+	t_env	*e;
+	int		i;
 
 	i = -1;
 	if (!(e = (t_env *)malloc(sizeof(*e))))
@@ -45,9 +59,9 @@ t_env *ft_init(void)
 		return (NULL);
 	while (++i < 2)
 	{
-		if (!(e->options[i] = (char*)malloc(sizeof(char) * 6)))
+		if (!(e->options[i] = (char*)malloc(sizeof(char) * 7)))
 			return (NULL);
-		e->options[i][6] = '\0';
+		e->options[i][7] = '\0';
 	}
 	if (!(e->limit = (t_limit*)malloc(sizeof(t_limit))))
 		return (NULL);
@@ -59,38 +73,59 @@ t_env *ft_init(void)
 	return (e);
 }
 
-void 	ft_get_option(char **options, char *str)
+void			ft_get_option(char **options, char *str)
 {
-	char *p;
-	int i;
+	int		i;
 
-	p = str;
-	while (*++p)
+	while (*++str)
 	{
 		i = -1;
-		while (++i < 6)
+		while (++i < 7)
 		{
-			if (options[0][i] == *p)
+			if (options[0][i] == *str)
 			{
-				options[1][i] += 1;
-				break;
+				options[1][i] = '1';
+				if (options[0][i] == 'l')
+					options[1][5] = '0';
+				else if (options[0][i] == '1')
+					options[1][0] = '0';
+				break ;
 			}
-			if (i > 5)
+			if (i == 6)
 			{
 				write(1, "ls: illegal option -- ", 22);
-				write(1, p, 1);
-				write(1, "\n", 1);
-				write(1, "usage: ls [-Ralrt] [file ...]\n", 30);
+				write(1, str, 1);
+				write(1, "\nusage: ls [-Radlrt1] [file ...]\n", 33);
 				exit(0);
 			}
 		}
 	}
 }
 
-t_env 	*ft_parse(int argc, char **argv)
+void			ft_get_argv(t_env *e, char *argv)
 {
-	t_env *e;
-	int i;
+	if ((-1 == stat(argv, &(e->stat_tmp))))
+	{
+		write(1, "ls: ", 4);
+		perror(argv);
+	}
+	else
+	{
+		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0'))
+			ft_insert_dir(e, argv);
+		else
+		{
+			ft_insert_file(e, argv);
+			if (e->options[1][0] > '0')
+				ft_get_limit(e, argv);
+		}
+	}
+}
+
+t_env			*ft_parse(int argc, char **argv)
+{
+	t_env	*e;
+	int		i;
 
 	e = ft_init();
 	i = 0;
@@ -99,30 +134,14 @@ t_env 	*ft_parse(int argc, char **argv)
 		if (argv[i][0] == '-')
 			ft_get_option(e->options, argv[i]);
 		else
-		{
-			if ((-1 == stat(argv[i], &(e->stat_tmp))))
-			{
-				write(1, "ls: ", 4);
-				perror(argv[i]);
-			}
-			else
-			{
-				if ((S_ISDIR(e->stat_tmp.st_mode)))
-				{
-					ft_insert_dir(e, argv[i]);
-				}
-				else
-				{
-					ft_insert_file(e, argv[i]);
-					if (e->options[1][0] > '0')
-						ft_get_limit(e, argv[i]);
-				}
-			}
-		}
+			ft_get_argv(e, argv[i]);
 	}
 	if (!e->dir_lst && !e->fil_lst)
 	{
-		ft_insert_dir(e, ".");
+		if (e->options[1][6] == '0')
+			ft_insert_dir(e, ".");
+		else
+			ft_insert_file(e, ".");
 	}
 	return (e);
 }
