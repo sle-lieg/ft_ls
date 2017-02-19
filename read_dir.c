@@ -53,7 +53,8 @@ void	ft_read(t_env *e, t_dir_lst *dir_lst)
 			if (elem->d_name[0] != '.'
 			|| (elem->d_name[0] == '.' && e->options[1][1] > '0'))
 				e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
-			if (e->options[1][0] > '0')
+			if (e->options[1][0] > '0' && (elem->d_name[0] != '.' ||
+				e->options[1][1] > '0'))
 				ft_get_limit(e, elem->d_name);
 		}
 		free(path_name);
@@ -62,24 +63,31 @@ void	ft_read(t_env *e, t_dir_lst *dir_lst)
 
 void	ft_get_limit(t_env *e, char *name)
 {
+	(void)name;
 	struct passwd	*password;
 	struct group	*grp;
 	int				len;
 
 	len = ft_strlen(ft_itoa(e->stat_tmp.st_nlink));
-	if (len > e->limit->len_lnk && (*name != '.' || e->options[1][1] > '0'))
+	if (len > e->limit->len_lnk)
 		e->limit->len_lnk = len;
 	password = getpwuid(e->stat_tmp.st_uid);
 	len = ft_strlen(password->pw_name);
-	if (len > e->limit->len_uid && (*name != '.' || e->options[1][1] > '0'))
+	if (len > e->limit->len_uid)
 		e->limit->len_uid = len;
 	grp = getgrgid(e->stat_tmp.st_gid);
 	len = ft_strlen(grp->gr_name);
-	if (len > e->limit->len_gid && (*name != '.' || e->options[1][1] > '0'))
+	if (len > e->limit->len_gid)
 		e->limit->len_gid = len;
 	len = ft_strlen(ft_itoa(e->stat_tmp.st_size));
-	if (len > e->limit->len_size && (*name != '.' || e->options[1][1] > '0'))
+	if (len > e->limit->len_size)
 		e->limit->len_size = len;
+	len = ft_strlen(ft_itoa(major(e->stat_tmp.st_rdev)));
+	if (len > e->limit->len_major)
+		e->limit->len_major = len;
+	len = ft_strlen(ft_itoa(minor(e->stat_tmp.st_rdev)));
+	if (len > e->limit->len_minor)
+		e->limit->len_minor = len;
 }
 
 void	ft_tmp(t_env *e, char *dir_name, char *path_name)

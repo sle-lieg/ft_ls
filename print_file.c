@@ -60,19 +60,48 @@ char	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 	return (p);
 }
 
+char *ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	char *maj;
+	char *min;
+	int len;	
+
+	maj = ft_itoa(major(fil_lst->stat.st_rdev));
+	len = ft_strlen(maj) - 1;
+	while (len++ < e->limit->len_major)
+		*p++ = ' ';
+	while (*maj)
+		*p++ = *maj++;
+	*p++ = ',';
+
+	min = ft_itoa(minor(fil_lst->stat.st_rdev));
+
+	len = ft_strlen(min) - 1;
+	while (len++ < e->limit->len_minor)
+		*p++ = ' ';
+	
+	while (*min)
+		*p++ = *min++;
+	*p++ = ' ';
+	return (p);
+}
+
 void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 {
 	char buff[512];
 	char *p;
 
-	printf("%s\n", e->dir_lst->d_name);
 	ft_bzero(&buff, 512);
 	p = buff;
 	p = ft_put_mode(e, p, fil_lst);
 	p = ft_put_nb_lnk(e, p, fil_lst);
 	p = ft_put_uid(e, p, fil_lst);
-	p = ft_put_gid(e, p, fil_lst);
-	p = ft_put_size(e, p, fil_lst);
+	p = ft_put_gid(e, p, fil_lst);	
+	if ((e->dir_lst && !ft_str_is_inc(e->dir_lst->path, "/dev"))
+		|| *buff == 'd' || *buff == 'l')
+		p = ft_put_size(e, p, fil_lst);
+	else
+		p = ft_put_dev_id(e, p, fil_lst);
 	p = ft_put_date(p, fil_lst);
 	p = ft_put_name(e, p, fil_lst);
 	ft_putstr(buff);

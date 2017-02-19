@@ -48,6 +48,7 @@ char	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 {
 	char	*tmp;
 	int		len;
+	int 	len_max;
 
 	if (!(tmp = ft_itoa(fil_lst->stat.st_size)))
 	{
@@ -55,7 +56,11 @@ char	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 		exit(0);
 	}
 	len = ft_strlen(tmp);
-	while (len++ < e->limit->len_size)
+	if (e->dir_lst && !ft_str_is_inc(e->dir_lst->path, "/dev"))
+		len_max = e->limit->len_size;
+	else
+		len_max = e->limit->len_minor + e->limit->len_major + 3;
+	while (len++ < len_max)
 		*p++ = ' ';
 	while (*tmp)
 		*p++ = *tmp++;
@@ -67,7 +72,13 @@ char	*ft_put_date(char *p, t_files_lst *fil_lst)
 {
 	char	*tmp;
 	int		i;
+	//long 	realt;
+//	long 	progt;
 
+//	progt = time(&fil_lst->stat.st_mtimespec.tv_sec);
+	//realt = time(NULL);
+	//printf("--%ld\n", progt);
+	// printf("++%ld\n", realt);
 	tmp = ctime(&fil_lst->stat.st_mtimespec.tv_sec);
 	i = 3;
 	if (tmp)

@@ -47,6 +47,8 @@ void	ft_reset_limit(t_env *e)
 	e->limit->len_uid = 0;
 	e->limit->len_gid = 0;
 	e->limit->len_size = 0;
+	e->limit->len_major = 0;
+	e->limit->len_minor = 0;
 }
 
 void	ft_destroy_fil_lst(t_env *e)

@@ -105,5 +105,5 @@ int				ft_count_n(unsigned int n);
 long			ft_pow(unsigned int n, int pow);
 char			*ft_itoa_base(uint64_t n, const int base);
 int				ft_get_next_line(const int fd, char **str);
-
+int 			ft_str_is_inc(char *big, char *ltl);
 #endif

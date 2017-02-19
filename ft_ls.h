@@ -32,6 +32,8 @@ typedef struct	s_limit
 	int					len_uid;
 	int					len_gid;
 	int					len_size;
+	int					len_major;
+	int					len_minor;
 }				t_limit;
 
 typedef struct	s_files_lst
@@ -108,6 +110,7 @@ void			ft_get_limit(t_env *e, char *name);
 */
 int				ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
 char			*ft_join_sep(char *s1, char *s2, char c);
+char 			*ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst);
 
 /*
  * ***** print_file.c *****
