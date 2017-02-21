@@ -14,22 +14,9 @@
 
 static void		ft_init_opt(t_env *e)
 {
-	e->options[0][0] = 'l';
-	e->options[0][1] = 'a';
-	e->options[0][2] = 'r';
-	e->options[0][3] = 't';
-	e->options[0][4] = 'R';
-	e->options[0][5] = '1';
-	e->options[0][6] = 'd';
-
-	e->options[1][0] = '0';
-	e->options[1][1] = '0';
-	e->options[1][2] = '0';
-	e->options[1][3] = '0';
-	e->options[1][4] = '0';
-	e->options[1][5] = '0';
-	e->options[1][6] = '0';
-
+	ft_strcpy(e->options[0], "lartR1d");
+	ft_memset(e->options[1], '0', 7);
+	ft_strcpy(e->modes_char, "-dlpcbs");
 	e->modes[0] = S_IFREG;
 	e->modes[1] = S_IFDIR;
 	e->modes[2] = S_IFLNK;
@@ -37,14 +24,7 @@ static void		ft_init_opt(t_env *e)
 	e->modes[4] = S_IFCHR;
 	e->modes[5] = S_IFBLK;
 	e->modes[6] = S_IFSOCK;
-
-	e->modes_char[0] = '-';
-	e->modes_char[1] = 'd';
-	e->modes_char[2] = 'l';
-	e->modes_char[3] = 'p';
-	e->modes_char[4] = 'c';
-	e->modes_char[5] = 'b';
-	e->modes_char[6] = 's';
+	e->check_if_arg = 0;
 }
 
 t_env			*ft_init(void)
@@ -93,9 +73,9 @@ void			ft_get_option(char **options, char *str)
 			}
 			if (i == 6)
 			{
-				write(1, "ls: illegal option -- ", 22);
-				write(1, str, 1);
-				write(1, "\nusage: ls [-Radlrt1] [file ...]\n", 33);
+				write(2, "ls: illegal option -- ", 22);
+				write(2, str, 1);
+				write(2, "\nusage: ls [-Radlrt1] [file ...]\n", 33);
 				exit(0);
 			}
 		}
@@ -104,44 +84,52 @@ void			ft_get_option(char **options, char *str)
 
 void			ft_get_argv(t_env *e, char *argv)
 {
-	if ((-1 == stat(argv, &(e->stat_tmp))))
+	if ((-1 == lstat(argv, &(e->stat_tmp))))
 	{
 		write(1, "ls: ", 4);
 		perror(argv);
 	}
 	else
 	{
-		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0'))
-			ft_insert_dir(e, argv);
+		e->tmp_name = ft_strdup(argv);
+
+		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0') || (S_ISLNK(e->stat_tmp.st_mode) > 0 && e->options[1][0] == '0'))
+			ft_insert_dir(e);
 		else
 		{
-			ft_insert_file(e, argv);
+			ft_insert_file(e);
 			if (e->options[1][0] > '0')
-				ft_get_limit(e, argv);
+				ft_get_limit(e);
 		}
 	}
+	e->check_if_arg = 1;
 }
 
 t_env			*ft_parse(int argc, char **argv)
 {
 	t_env	*e;
 	int		i;
+	int 	end_opt;
 
 	e = ft_init();
 	i = 0;
+	end_opt = 0;
 	while (++i < argc)
 	{
-		if (argv[i][0] == '-')
+		if (argv[i][0] == '-' && argv[i][1] == '-')
+			end_opt = 1;
+		else if (argv[i][0] == '-' && !end_opt)
 			ft_get_option(e->options, argv[i]);
 		else
 			ft_get_argv(e, argv[i]);
 	}
-	if (!e->dir_lst && !e->fil_lst)
+	if (!e->dir_lst && !e->fil_lst && !e->check_if_arg)
 	{
+		e->tmp_name = ".";
 		if (e->options[1][6] == '0')
-			ft_insert_dir(e, ".");
+			ft_insert_dir(e);
 		else
-			ft_insert_file(e, ".");
+			ft_insert_file(e);
 	}
 	return (e);
 }

@@ -98,14 +98,16 @@ void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	p = ft_put_uid(e, p, fil_lst);
 	p = ft_put_gid(e, p, fil_lst);	
 	if ((e->dir_lst && !ft_str_is_inc(e->dir_lst->path, "/dev"))
-		|| *buff == 'd' || *buff == 'l')
+		|| *buff == 'd' || *buff == 'l' || !e->dir_lst)
+	{
 		p = ft_put_size(e, p, fil_lst);
+	}
 	else
 		p = ft_put_dev_id(e, p, fil_lst);
-	p = ft_put_date(p, fil_lst);
-	p = ft_put_name(e, p, fil_lst);
+	p = ft_put_date(p, fil_lst);	
+	p = ft_put_name(e, p, fil_lst);	
 	ft_putstr(buff);
-	write(1, "\n", 1);
+	write(1, "\n", 1);	
 }
 
 void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)

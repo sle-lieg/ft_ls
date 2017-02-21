@@ -43,27 +43,43 @@ void	ft_read(t_env *e, t_dir_lst *dir_lst)
 	path_name = NULL;
 	while ((elem = readdir(dir_lst->dir)))
 	{
+
+		e->tmp_name = ft_strdup(elem->d_name);
+
 		path_name = ft_join_sep(dir_lst->path, elem->d_name, '/');
 		if (!(lstat(path_name, &(e->stat_tmp))))
 		{
 			if ((S_ISDIR(e->stat_tmp.st_mode)
 			&& e->options[1][4] > '0' && elem->d_name[0] != '.'))
-				ft_tmp_lst(e, elem->d_name, path_name);
-			ft_insert_file(e, elem->d_name);
+				ft_tmp_lst(e, path_name);
+			ft_insert_file(e);
 			if (elem->d_name[0] != '.'
 			|| (elem->d_name[0] == '.' && e->options[1][1] > '0'))
 				e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
 			if (e->options[1][0] > '0' && (elem->d_name[0] != '.' ||
 				e->options[1][1] > '0'))
-				ft_get_limit(e, elem->d_name);
+				ft_get_limit(e);
 		}
+		// path_name = ft_join_sep(dir_lst->path, elem->d_name, '/');
+		// if (!(lstat(path_name, &(e->stat_tmp))))
+		// {
+		// 	if ((S_ISDIR(e->stat_tmp.st_mode)
+		// 	&& e->options[1][4] > '0' && elem->d_name[0] != '.'))
+		// 		ft_tmp_lst(e, elem->d_name, path_name);
+		// 	ft_insert_file(e, elem->d_name);
+		// 	if (elem->d_name[0] != '.'
+		// 	|| (elem->d_name[0] == '.' && e->options[1][1] > '0'))
+		// 		e->dir_lst->blocks_size += e->stat_tmp.st_blocks;
+		// 	if (e->options[1][0] > '0' && (elem->d_name[0] != '.' ||
+		// 		e->options[1][1] > '0'))
+		// 		ft_get_limit(e);
+		// }
 		free(path_name);
 	}
 }
 
-void	ft_get_limit(t_env *e, char *name)
+void	ft_get_limit(t_env *e)
 {
-	(void)name;
 	struct passwd	*password;
 	struct group	*grp;
 	int				len;
@@ -90,22 +106,22 @@ void	ft_get_limit(t_env *e, char *name)
 		e->limit->len_minor = len;
 }
 
-void	ft_tmp(t_env *e, char *dir_name, char *path_name)
+void	ft_tmp(t_env *e, char *path_name)
 {
 	t_dir_lst *tmp;
 
-	if (e->options[1][2] > '0')
-		tmp = ft_sort_drev(e->tmp_lst, dir_name);
+	if (e->options[1][3] == '0')
+		tmp = ft_sort_ascii(e);
 	else
-		tmp = ft_sort_d(e->tmp_lst, dir_name);
+		tmp = ft_sort_time(e, e->stat_tmp.st_mtimespec.tv_sec);
 	if (tmp && !tmp->prev)
 	{
-		tmp->prev = ft_add_dir(path_name, dir_name, NULL, tmp);
+		tmp->prev = ft_add_dir(e, path_name, NULL, tmp);
 		e->tmp_lst = tmp->prev;
 	}
 	else if (tmp)
 	{
-		tmp->prev->next = ft_add_dir(path_name, dir_name, tmp->prev, tmp);
+		tmp->prev->next = ft_add_dir(e, path_name, tmp->prev, tmp);
 		tmp->prev = tmp->prev->next;
 	}
 	else
@@ -113,15 +129,50 @@ void	ft_tmp(t_env *e, char *dir_name, char *path_name)
 		tmp = e->tmp_lst;
 		while (tmp->next)
 			tmp = tmp->next;
-		tmp->next = ft_add_dir(path_name, dir_name, tmp, NULL);
+		tmp->next = ft_add_dir(e, path_name, tmp, NULL);
 	}
 }
 
-int		ft_tmp_lst(t_env *e, char *dir_name, char *path_name)
+int		ft_tmp_lst(t_env *e, char *path_name)
 {
 	if (!(e->tmp_lst))
-		e->tmp_lst = ft_add_dir(path_name, dir_name, NULL, NULL);
+		e->tmp_lst = ft_add_dir(e, path_name, NULL, NULL);
 	else
-		ft_tmp(e, dir_name, path_name);
+		ft_tmp(e, path_name);
 	return (0);
 }
+// void	ft_tmp(t_env *e, char *dir_name, char *path_name)
+// {
+// 	t_dir_lst *tmp;
+
+// 	if (e->options[1][3] == '0')
+// 		tmp = ft_sort_ascii(e, dir_name);
+// 	else
+// 		tmp = ft_sort_time(e, e->stat_tmp.st_mtimespec.tv_sec, dir_name);
+// 	if (tmp && !tmp->prev)
+// 	{
+// 		tmp->prev = ft_add_dir(e, path_name, dir_name, NULL, tmp);
+// 		e->tmp_lst = tmp->prev;
+// 	}
+// 	else if (tmp)
+// 	{
+// 		tmp->prev->next = ft_add_dir(e, path_name, dir_name, tmp->prev, tmp);
+// 		tmp->prev = tmp->prev->next;
+// 	}
+// 	else
+// 	{
+// 		tmp = e->tmp_lst;
+// 		while (tmp->next)
+// 			tmp = tmp->next;
+// 		tmp->next = ft_add_dir(e, path_name, dir_name, tmp, NULL);
+// 	}
+// }
+
+// int		ft_tmp_lst(t_env *e, char *dir_name, char *path_name)
+// {
+// 	if (!(e->tmp_lst))
+// 		e->tmp_lst = ft_add_dir(e, path_name, dir_name, NULL, NULL);
+// 	else
+// 		ft_tmp(e, dir_name, path_name);
+// 	return (0);
+// }
