@@ -86,12 +86,6 @@ void			ft_get_argv(t_env *e, char *argv);
 /*
  * ***** ft_fil_lst *****
 */
-// int				ft_insert_file(t_env *e, char *file_name);
-// t_files_lst		*ft_add_file(t_env *e, char *fnam,\
-// 				t_files_lst *pr, t_files_lst *nx);
-// t_files_lst		*ft_sort_fascii(t_env *e, char *name);
-// t_files_lst 	*ft_sort_ftime(t_env *e, long int time, char *name);
-// void			ft_sort_file(t_env *e, char *file_name);
 int				ft_insert_file(t_env *e);
 t_files_lst		*ft_add_file(t_env *e, t_files_lst *pr, t_files_lst *nx);
 t_files_lst		*ft_sort_fascii(t_env *e);
@@ -101,13 +95,6 @@ void			ft_sort_file(t_env *e);
 /*
  * ***** ft_dir_lst *****
 */
-
-// int				ft_insert_dir(t_env *e, char *dir_name);
-// t_dir_lst 		*ft_sort_time(t_env *e, long int time, char *dir_name);
-// t_dir_lst		*ft_sort_ascii(t_env *e, char *name);
-// t_dir_lst		*ft_add_dir(t_env *e, char *path, char *d_name,\
-// 				t_dir_lst *pr, t_dir_lst *nx);
-// void			ft_sort_dir(t_env *e, char *dir_name);
 int				ft_insert_dir(t_env *e);
 t_dir_lst 		*ft_sort_time(t_env *e, long int time);
 t_dir_lst		*ft_sort_ascii(t_env *e);
@@ -117,11 +104,6 @@ void			ft_sort_dir(t_env *e);
 /*
  * ***** read_dir.c *****
 */
-// int				ft_read_dir(t_env *e, t_dir_lst *dir_lst);
-// int				ft_tmp_lst(t_env *e, char *dir_name, char *path_name);
-// void			ft_read(t_env *e, t_dir_lst *dir_lst);
-// void			ft_tmp(t_env *e, char *dir_name, char *path_name);
-// void			ft_get_limit(t_env *e);
 int				ft_read_dir(t_env *e, t_dir_lst *dir_lst);
 int				ft_tmp_lst(t_env *e, char *path_name);
 void			ft_read(t_env *e, t_dir_lst *dir_lst);

@@ -92,7 +92,6 @@ void			ft_get_argv(t_env *e, char *argv)
 	else
 	{
 		e->tmp_name = ft_strdup(argv);
-
 		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0') || (S_ISLNK(e->stat_tmp.st_mode) > 0 && e->options[1][0] == '0'))
 			ft_insert_dir(e);
 		else
@@ -123,13 +122,18 @@ t_env			*ft_parse(int argc, char **argv)
 		else
 			ft_get_argv(e, argv[i]);
 	}
-	if (!e->dir_lst && !e->fil_lst && !e->check_if_arg)
+	if (!e->tmp_lst && !e->fil_lst && !e->check_if_arg)
 	{
 		e->tmp_name = ".";
 		if (e->options[1][6] == '0')
 			ft_insert_dir(e);
 		else
 			ft_insert_file(e);
+	}
+	if (e->tmp_lst)
+	{
+		e->dir_lst = e->tmp_lst;
+		e->tmp_lst = NULL;
 	}
 	return (e);
 }
