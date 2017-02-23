@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 21:15:02 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 22:40:24 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/23 01:10:00 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 {
 	char	*tmp;
 	int		len;
-	int 	len_max;
+	int		len_max;
 
 	if (!(tmp = ft_itoa(fil_lst->stat.st_size)))
 	{
@@ -72,13 +72,12 @@ char	*ft_put_size(t_env *e, char *p, t_files_lst *fil_lst)
 char	*ft_put_date(char *p, t_files_lst *fil_lst)
 {
 	char		*tmp;
-	int 		i;
+	int			i;
 	long int	today;
 	time_t		t;
 
 	tmp = ctime(&fil_lst->stat.st_mtimespec.tv_sec);
 	today = time(&t);
-
 	i = 3;
 	if (tmp)
 	{
@@ -108,16 +107,16 @@ char	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
 	char	*path;
 	int		ret;
 
-	ft_strcpy(p, fil_lst->f_name);	
+	ft_strcpy(p, fil_lst->f_name);
 	if (S_ISLNK(fil_lst->stat.st_mode))
 	{
 		ft_bzero(&tmp, 512);
 		while (*p)
 			p++;
 		if (e->dir_lst)
-			path = ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/');	
+			path = ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/');
 		else
-			path = ft_join_sep(NULL, fil_lst->f_name, '/');	
+			path = ft_join_sep(NULL, fil_lst->f_name, '/');
 		ret = readlink(path, tmp, 512);
 		if (ret == -1)
 			perror("");

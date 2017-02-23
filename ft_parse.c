@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 20:11:33 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 20:19:16 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/23 01:00:46 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ void			ft_get_argv(t_env *e, char *argv)
 	else
 	{
 		e->tmp_name = ft_strdup(argv);
-		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0') || (S_ISLNK(e->stat_tmp.st_mode) > 0 && e->options[1][0] == '0'))
+		if ((S_ISDIR(e->stat_tmp.st_mode) && e->options[1][6] == '0') ||
+			(S_ISLNK(e->stat_tmp.st_mode) > 0 && e->options[1][0] == '0'))
 			ft_insert_dir(e);
 		else
 		{
@@ -108,7 +109,7 @@ t_env			*ft_parse(int argc, char **argv)
 {
 	t_env	*e;
 	int		i;
-	int 	end_opt;
+	int		end_opt;
 
 	e = ft_init();
 	i = 0;

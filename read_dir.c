@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 20:11:57 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 22:43:15 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/23 01:11:07 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ void	ft_read(t_env *e, t_dir_lst *dir_lst)
 	path_name = NULL;
 	while ((elem = readdir(dir_lst->dir)))
 	{
-
 		e->tmp_name = ft_strdup(elem->d_name);
-
 		path_name = ft_join_sep(dir_lst->path, elem->d_name, '/');
 		if (!(lstat(path_name, &(e->stat_tmp))))
 		{

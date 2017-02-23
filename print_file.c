@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 20:11:49 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 22:38:30 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/23 01:05:05 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,32 +60,6 @@ char	*ft_put_nb_lnk(t_env *e, char *p, t_files_lst *fil_lst)
 	return (p);
 }
 
-char *ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst)
-{
-	char *maj;
-	char *min;
-	int len;	
-
-	maj = ft_itoa(major(fil_lst->stat.st_rdev));
-	len = ft_strlen(maj) - 1;
-	while (len++ < e->limit->len_major)
-		*p++ = ' ';
-	while (*maj)
-		*p++ = *maj++;
-	*p++ = ',';
-
-	min = ft_itoa(minor(fil_lst->stat.st_rdev));
-
-	len = ft_strlen(min) - 1;
-	while (len++ < e->limit->len_minor)
-		*p++ = ' ';
-	
-	while (*min)
-		*p++ = *min++;
-	*p++ = ' ';
-	return (p);
-}
-
 void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 {
 	char buff[512];
@@ -96,7 +70,7 @@ void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	p = ft_put_mode(e, p, fil_lst);
 	p = ft_put_nb_lnk(e, p, fil_lst);
 	p = ft_put_uid(e, p, fil_lst);
-	p = ft_put_gid(e, p, fil_lst);	
+	p = ft_put_gid(e, p, fil_lst);
 	if ((e->dir_lst && !ft_str_is_inc(e->dir_lst->path, "/dev"))
 		|| *buff == 'd' || *buff == 'l' || !e->dir_lst)
 	{
@@ -104,10 +78,10 @@ void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 	}
 	else
 		p = ft_put_dev_id(e, p, fil_lst);
-	p = ft_put_date(p, fil_lst);	
-	p = ft_put_name(e, p, fil_lst);	
+	p = ft_put_date(p, fil_lst);
+	p = ft_put_name(e, p, fil_lst);
 	ft_putstr(buff);
-	write(1, "\n", 1);	
+	write(1, "\n", 1);
 }
 
 void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
@@ -142,7 +116,8 @@ int		ft_print_files(t_env *e, int dir)
 	tmp = e->fil_lst;
 	while (tmp)
 	{
-		if (tmp->f_name[0] != '.' || e->options[1][1] > '0' || e->options[1][6] > '0')
+		if (tmp->f_name[0] != '.' || e->options[1][1] > '0'
+		|| e->options[1][6] > '0')
 			ft_print(e, tmp, dir, &printed);
 		tmp = tmp->next;
 	}

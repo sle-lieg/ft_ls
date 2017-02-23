@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 21:39:03 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 22:45:10 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/23 01:13:50 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,4 +52,27 @@ char	*ft_join_sep(char *s1, char *s2, char c)
 	}
 	*p = '\0';
 	return (new);
+}
+
+char	*ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst)
+{
+	char	*maj;
+	char	*min;
+	int		len;
+
+	maj = ft_itoa(major(fil_lst->stat.st_rdev));
+	len = ft_strlen(maj) - 1;
+	while (len++ < e->limit->len_major)
+		*p++ = ' ';
+	while (*maj)
+		*p++ = *maj++;
+	*p++ = ',';
+	min = ft_itoa(minor(fil_lst->stat.st_rdev));
+	len = ft_strlen(min) - 1;
+	while (len++ < e->limit->len_minor)
+		*p++ = ' ';
+	while (*min)
+		*p++ = *min++;
+	*p++ = ' ';
+	return (p);
 }
