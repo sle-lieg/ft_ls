@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/18 20:11:17 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/02/18 22:34:57 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/24 19:11:35 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <time.h>
 # include "libft/libft.h"
 
-#define ABS(x) (((x) < 0) ? -(x) : (x))
+# define ABS(x) (((x) < 0) ? -(x) : (x))
 
 typedef struct	s_limit
 {
@@ -40,8 +40,7 @@ typedef struct	s_limit
 
 typedef struct	s_files_lst
 {
-	long int 			f_time;
-
+	long int			f_time;
 	char				*f_name;
 	struct stat			stat;
 	struct s_files_lst	*next;
@@ -51,8 +50,7 @@ typedef struct	s_files_lst
 
 typedef struct	s_dir_lst
 {
-	long int 			d_time;
-
+	long int			d_time;
 	char				*d_name;
 	char				*path;
 	off_t				blocks_size;
@@ -63,7 +61,8 @@ typedef struct	s_dir_lst
 
 typedef struct	s_env
 {
-	int 				check_if_arg;
+	int					check_if_arg;
+	int 				end_opt;
 	char				**options;
 	struct s_limit		*limit;
 	struct s_dir_lst	*dir_lst;
@@ -72,7 +71,7 @@ typedef struct	s_env
 	struct stat			stat_tmp;
 	unsigned int		modes[7];
 	char				modes_char[7];
-	char 				*tmp_name;
+	char				*tmp_name;
 }				t_env;
 
 /*
@@ -89,14 +88,14 @@ void			ft_get_argv(t_env *e, char *argv);
 int				ft_insert_file(t_env *e);
 t_files_lst		*ft_add_file(t_env *e, t_files_lst *pr, t_files_lst *nx);
 t_files_lst		*ft_sort_fascii(t_env *e);
-t_files_lst 	*ft_sort_ftime(t_env *e, long int time);
+t_files_lst		*ft_sort_ftime(t_env *e, long int time);
 void			ft_sort_file(t_env *e);
 
 /*
  * ***** ft_dir_lst *****
 */
 int				ft_insert_dir(t_env *e);
-t_dir_lst 		*ft_sort_time(t_env *e, long int time);
+t_dir_lst		*ft_sort_time(t_env *e, long int time);
 t_dir_lst		*ft_sort_ascii(t_env *e);
 t_dir_lst		*ft_add_dir(t_env *e, char *path, t_dir_lst *pr, t_dir_lst *nx);
 void			ft_sort_dir(t_env *e);
@@ -115,7 +114,8 @@ void			ft_get_limit(t_env *e);
 */
 int				ft_merge_lst(t_env *e, t_dir_lst *dir_lst);
 char			*ft_join_sep(char *s1, char *s2, char c);
-char 			*ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst);
+char			*ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst);
+char			*ft_put_diff_date(char *p, char *tmp, long int today, long int f_time);
 
 /*
  * ***** print_file.c *****

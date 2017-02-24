@@ -23,15 +23,10 @@ int		ft_ls(t_env *e)
 		write(1, "\n", 1);
 	while (tmp)
 	{
-		if (e->fil_lst || e->dir_lst->next)
-		{
-			ft_putstr(tmp->path);
-			write(1, ":\n", 2);
-		}
-		if (e->fil_lst)
-			ft_destroy_fil_lst(e);
 		ft_read_dir(e, tmp);
 		ft_print_files(e, 1);
+		if (e->fil_lst)
+			ft_destroy_fil_lst(e);
 		e->dir_lst = e->dir_lst->next;
 		ft_destroy_dir(tmp);
 		tmp = e->dir_lst;

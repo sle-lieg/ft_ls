@@ -15,7 +15,7 @@
 static void		ft_init_opt(t_env *e)
 {
 	ft_strcpy(e->options[0], "lartR1d");
-	ft_memset(e->options[1], '0', 7);
+	ft_memset(e->options[1], '0', 8);
 	ft_strcpy(e->modes_char, "-dlpcbs");
 	e->modes[0] = S_IFREG;
 	e->modes[1] = S_IFDIR;
@@ -25,6 +25,7 @@ static void		ft_init_opt(t_env *e)
 	e->modes[5] = S_IFBLK;
 	e->modes[6] = S_IFSOCK;
 	e->check_if_arg = 0;
+	e->end_opt = 0;
 }
 
 t_env			*ft_init(void)
@@ -86,7 +87,7 @@ void			ft_get_argv(t_env *e, char *argv)
 {
 	if ((-1 == lstat(argv, &(e->stat_tmp))))
 	{
-		write(1, "ls: ", 4);
+		write(2, "ls: ", 4);
 		perror(argv);
 	}
 	else
@@ -109,16 +110,14 @@ t_env			*ft_parse(int argc, char **argv)
 {
 	t_env	*e;
 	int		i;
-	int		end_opt;
 
 	e = ft_init();
 	i = 0;
-	end_opt = 0;
 	while (++i < argc)
 	{
 		if (argv[i][0] == '-' && argv[i][1] == '-')
-			end_opt = 1;
-		else if (argv[i][0] == '-' && !end_opt)
+			e->end_opt = 1;
+		else if (argv[i][0] == '-' && !e->end_opt)
 			ft_get_option(e->options, argv[i]);
 		else
 			ft_get_argv(e, argv[i]);
@@ -131,10 +130,7 @@ t_env			*ft_parse(int argc, char **argv)
 		else
 			ft_insert_file(e);
 	}
-	if (e->tmp_lst)
-	{
-		e->dir_lst = e->tmp_lst;
+	if ((e->dir_lst = e->tmp_lst))
 		e->tmp_lst = NULL;
-	}
 	return (e);
 }

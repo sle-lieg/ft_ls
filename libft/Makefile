@@ -1,5 +1,7 @@
 NAME = libft.a
+
 FLAGS = -g -Wall -Wextra -Werror
+
 SRC = ft_memset.c ft_bzero.c ft_memcpy.c\
 	  ft_memccpy.c ft_memmove.c ft_memchr.c ft_memcmp.c\
 	  ft_strlen.c ft_strdup.c ft_strcpy.c ft_strncpy.c\
@@ -25,15 +27,21 @@ OBJ = $(SRC:.c=.o)
 
 all : $(NAME)
 
-$(NAME) : 
-	gcc $(FLAGS) -c $(SRC)
-	ar rc $(NAME) $(OBJ)
-	ranlib $(NAME)
+$(NAME) : $(OBJ)
+	@echo "\033[1;32m◊ +++++ CREATING $(NAME)	: √\033[0m"
+	@ar rc $(NAME) $(OBJ)
+	@ranlib $(NAME)
 
-clean :
-	rm -rf $(OBJ)
+%.o: %.c
+	@gcc -c $(FLAGS) $(SRC)	
+	@echo "\033[1;32m◊ +++++ CREATING $(NAME) OBJECTS: √\033[0m"
 
 fclean : clean
-	rm -rf $(NAME)
+	@rm -rf $(NAME)
+	@echo "\033[1;31m◊ ----- DELETING $(NAME)	        : √\033[0m"
+
+clean :
+	@rm -rf $(OBJ)
+	@echo "\033[1;31m◊ ----- DELETING $(NAME) OBJECTS: √\033[0m"
 
 re : fclean all

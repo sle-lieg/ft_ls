@@ -16,15 +16,22 @@ int		ft_read_dir(t_env *e, t_dir_lst *dir_lst)
 {
 	if (!(dir_lst->dir = opendir(dir_lst->path)))
 	{
-		if (dir_lst->next)
+		if (dir_lst->next || dir_lst->prev)
 		{
 			ft_putstr(dir_lst->path);
-			write(1, ":\n", 2);
+			write(2, ":\n", 2);
 		}
 		write(2, "ls: ", 4);
 		perror(dir_lst->d_name);
 		return (0);
 	}
+	if (e->fil_lst || e->dir_lst->next || e->dir_lst->prev)
+	{
+		ft_putstr(dir_lst->path);
+		write(1, ":\n", 2);
+	}
+	if (e->fil_lst)
+		ft_destroy_fil_lst(e);
 	ft_read(e, dir_lst);
 	if (e->tmp_lst)
 	{

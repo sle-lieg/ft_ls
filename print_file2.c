@@ -84,20 +84,7 @@ char	*ft_put_date(char *p, t_files_lst *fil_lst)
 		while (++i < 11)
 			*p++ = *(tmp + i);
 	}
-	if (ABS(today - fil_lst->stat.st_mtimespec.tv_sec) > 15552000)
-	{
-		*p++ = ' ';
-		i = 19;
-		while (++i < 24)
-			*p++ = *(tmp + i);
-	}
-	else
-	{
-		i = 10;
-		while (++i < 16)
-			*p++ = *(tmp + i);
-	}
-	*p++ = ' ';
+	p = ft_put_diff_date(p, tmp, today, fil_lst->stat.st_mtimespec.tv_sec);
 	return (p);
 }
 
@@ -113,11 +100,10 @@ char	*ft_put_name(t_env *e, char *p, t_files_lst *fil_lst)
 		ft_bzero(&tmp, 512);
 		while (*p)
 			p++;
-		if (e->dir_lst)
-			path = ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/');
-		else
-			path = ft_join_sep(NULL, fil_lst->f_name, '/');
-		ret = readlink(path, tmp, 512);
+		path = (e->dir_lst ?\
+			ft_join_sep(e->dir_lst->path, fil_lst->f_name, '/') :\
+			ft_join_sep(".", fil_lst->f_name, '/'));
+		ret = readlink(path, &(tmp[0]), 512);
 		if (ret == -1)
 			perror("");
 		else

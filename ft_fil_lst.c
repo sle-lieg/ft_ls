@@ -59,27 +59,23 @@ t_files_lst	*ft_sort_ftime(t_env *e, long int time)
 	t_files_lst	*tmp;
 
 	tmp = e->fil_lst;
-	if (e->options[1][2] > '0')
+	while (tmp)
 	{
-		while (tmp)
+		if (e->options[1][2] > '0')
 		{
 			if (time < tmp->stat.st_mtimespec.tv_sec ||
 			(time == tmp->stat.st_mtimespec.tv_sec &&
 			ft_strcmp(e->tmp_name, tmp->f_name) > 0))
 				return (tmp);
-			tmp = tmp->next;
 		}
-	}
-	else
-	{
-		while (tmp)
+		else
 		{
 			if (time > tmp->stat.st_mtimespec.tv_sec ||
 			(time == tmp->stat.st_mtimespec.tv_sec &&
 			ft_strcmp(e->tmp_name, tmp->f_name) < 0))
 				return (tmp);
-			tmp = tmp->next;
 		}
+		tmp = tmp->next;
 	}
 	return (NULL);
 }

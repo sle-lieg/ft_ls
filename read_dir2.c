@@ -76,3 +76,24 @@ char	*ft_put_dev_id(t_env *e, char *p, t_files_lst *fil_lst)
 	*p++ = ' ';
 	return (p);
 }
+
+char 	*ft_put_diff_date(char *p, char *tmp, long int today, long int f_time)
+{
+	int i;
+
+	if (ABS(today - f_time) > 15552000)
+	{
+		*p++ = ' ';
+		i = 19;
+		while (++i < 24)
+			*p++ = *(tmp + i);
+	}
+	else
+	{
+		i = 10;
+		while (++i < 16)
+			*p++ = *(tmp + i);
+	}
+	*p++ = ' ';
+	return (p);	
+}

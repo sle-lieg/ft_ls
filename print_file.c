@@ -86,7 +86,7 @@ void	ft_print_l(t_env *e, t_files_lst *fil_lst)
 
 void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
 {
-	if (e->options[1][0] > '0' && e->options[1][5] == '0')
+	if (e->options[1][0] > '0')
 	{
 		if (!*printed && dir)
 		{
@@ -98,6 +98,7 @@ void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
 	}
 	else
 	{
+		ft_print_reg(e, tmp);
 		ft_putstr(tmp->f_name);
 		if (e->options[1][5] > '0' || (e->options[1][5] == '0' && !tmp->next))
 			write(1, "\n", 1);
@@ -106,6 +107,29 @@ void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
 	}
 	*printed = 1;
 }
+
+// void	ft_print(t_env *e, t_files_lst *tmp, int dir, int *printed)
+// {
+// 	if (e->options[1][0] > '0')
+// 	{
+// 		if (!*printed && dir)
+// 		{
+// 			write(1, "total ", 6);
+// 			ft_putnbr(e->dir_lst->blocks_size);
+// 			write(1, "\n", 1);
+// 		}
+// 		ft_print_l(e, tmp);
+// 	}
+// 	else
+// 	{
+// 		ft_putstr(tmp->f_name);
+// 		if (e->options[1][5] > '0' || (e->options[1][5] == '0' && !tmp->next))
+// 			write(1, "\n", 1);
+// 		else
+// 			write(1, " ", 1);
+// 	}
+// 	*printed = 1;
+// }
 
 int		ft_print_files(t_env *e, int dir)
 {

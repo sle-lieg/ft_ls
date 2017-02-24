@@ -6,7 +6,7 @@
 /*   By: sle-lieg <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/09 15:31:59 by sle-lieg          #+#    #+#             */
-/*   Updated: 2017/01/15 04:01:51 by sle-lieg         ###   ########.fr       */
+/*   Updated: 2017/02/24 18:14:47 by sle-lieg         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,5 +105,5 @@ int				ft_count_n(unsigned int n);
 long			ft_pow(unsigned int n, int pow);
 char			*ft_itoa_base(uint64_t n, const int base);
 int				ft_get_next_line(const int fd, char **str);
-int 			ft_str_is_inc(char *big, char *ltl);
+int				ft_str_is_inc(char *big, char *ltl);
 #endif
